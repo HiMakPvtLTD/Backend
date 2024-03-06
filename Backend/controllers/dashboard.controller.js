@@ -1,10 +1,7 @@
 const dashboardModel = require('../models/dashboard.model');
 const dat=require("../function/date")
 var db=require("../database/db")
-//var moment=require('moment')
 const verify=require("../function/tokenverify")
-// const zlib=require("zlib")
-// const mini=require('json-minify')
 
 
 const getMainDashboardData = async (req, res) => {
