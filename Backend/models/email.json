@@ -1,0 +1,14 @@
+[
+    {
+        "Subject":"Update Your Avishkar Lab Application Account",
+        "Body": "Welcome to Avishkar NPD Lab Application.\n This will help you monitor & analyse test bench operation remotely to optimize the testing of the equipment’s.\n",
+        "Body2":"Follow below steps to setup password to access application:\n1.Click on link https://avishkarlab.idexinsights.ai \n2.Enter “Actual Username” in username tab\n3.Click on “Forgot Password?”\n",
+        "Body3":"4.Enter OTP received on email or phone\n5.Enter OTP and set the password\n6.Reset after entering OTP and password\n7.Login with Username and password\n\n",
+        "Body4":"In case of any trouble, please contact iotlab@idexcorp.com\nThank You,\nAvishkar NPD Lab"
+    },                                 
+    {
+        "Body1":"Welcome to the Avishkar NPD Lab Application.\n 1.Welcome to the Avishkar NPD Lab Application. \n2. Enter “Actual Username” in username tab\n 3. Click on “Forgot Password?”\n",
+
+        "Body2":"4.Enter OTP received on email or phone\n 5.Enter OTP and set the password to login"
+    }
+]
