@@ -5,6 +5,7 @@ const db = require('../database/db');
 const mails=require("../function/mail")
 const hash=require("../database/hash")
 const emailBody=require("../models/email.json")
+const image=require("../function/image")
 
 
 const getUserByUsernameAndPassword = async (uname, password) => {
@@ -242,14 +243,51 @@ const getAlluser=async()=>{
 }
 const CreateUser=async(data)=>{
   try{
-    console.log(Object.keys(data).length)
-    if(Object.keys(data).length>=12||Object.keys(data).length<=10||data==undefined||data==null){
+   // console.log(Object.keys(data).length)
+    if(Object.keys(data).length>=13||Object.keys(data).length<=11||data==undefined||data==null){
       return {
         message:"Data Not Found",
         status:404
       }
     }
-    else if(Object.keys(data).length==11){
+//     else if(Object.keys(data).length==11){
+
+
+//       const search=`select uname from "UserMaster" where uname='${data.name}'`
+//       const found=await db.query(search)
+//      // console.log(found.rows)
+//       if(found.rowCount>=1){
+//         return {
+//           message:"User Found",
+//           status:401
+//         }
+//       }
+//       else{
+//         const query=`INSERT INTO public."UserMaster"(
+//           uname, password, updateddate, updatedby, email, roleid, mobileno, createddate, ustatus,fullname,type)
+//           VALUES ('${data.name}', '${data.password}', '${data.updateDate}', ${data.updateby}, '${data.email}', ${data.roleid}, ${data.mobile}, '${data.createdate}', ${data.status},'${data.fullname}','${data.type}');`
+  
+//         console.log(query)
+//         const result=await db.query(query)
+//         const mailbody=`Dear ${data.fullname},\n Welcome to Avishkar NPD Lab Application.\n This will help you monitor & analyse test bench operation remotely to optimize the testing of the equipment’s.\nFollow below steps to setup password to access application:\n\n1.Click on  https://avishkarlab.idexinsights.ai link.\n2.Enter ${data.name} in username tab\n3.Click on “Forgot Password?”\n4.Enter OTP received on email or phone\n5.Enter OTP and set the password\n6.Reset after entering OTP and password\n7.Login with Username and password\n\nIn case of any trouble, please contact iotlab@idexcorp.com\nThank You,\nAvishkar NPD Lab
+//         `
+// const smsbody=` Dear ${data.fullname},\n  Welcome to the Avishkar NPD Lab Application.\n 1.Click on https://avishkarlab.idexinsights.ai link to set password.\n2. Enter ${data.name} in username tab\n 3. Click on “Forgot Password?”\n4.Enter OTP received on email or phone\n 5.Enter OTP and set the password to login
+// `
+//         const subject="Update Your Avishkar Lab Application Account"
+//         const sendMessage=mails.Sms(data.mobile,smsbody)
+//         console.log(sendMessage)
+//         const sendMail=mails.sendMail(data.email,mailbody,subject)
+//         console.log(sendMail)
+//         return {
+//           message:"Inserted Succesfully",
+//           status:200
+//         }
+
+//       }
+      
+
+//     }
+    else if(Object.keys(data).length==12){
 
 
       const search=`select uname from "UserMaster" where uname='${data.name}'`
@@ -262,9 +300,15 @@ const CreateUser=async(data)=>{
         }
       }
       else{
+        var newimage=''
+        if(data.userimage!=''){
+         newimage=await image.compress_image(data.userimage)
+        }
+        console.log(newimage)
+        
         const query=`INSERT INTO public."UserMaster"(
-          uname, password, updateddate, updatedby, email, roleid, mobileno, createddate, ustatus,fullname,type)
-          VALUES ('${data.name}', '${data.password}', '${data.updateDate}', ${data.updateby}, '${data.email}', ${data.roleid}, ${data.mobile}, '${data.createdate}', ${data.status},'${data.fullname}','${data.type}');`
+          uname, password, updateddate, updatedby, email, roleid, mobileno, createddate, ustatus,fullname,type,userimage)
+          VALUES ('${data.name}', '${data.password}', '${data.updateDate}', ${data.updateby}, '${data.email}', ${data.roleid}, ${data.mobile}, '${data.createdate}', ${data.status},'${data.fullname}','${data.type}','${newimage}');`
   
         console.log(query)
         const result=await db.query(query)
@@ -296,16 +340,25 @@ const smsbody=` Dear ${data.fullname},\n  Welcome to the Avishkar NPD Lab Applic
 }
 const UpdateUser=async(uid,data)=>{
   try{
-    //const arr=Array(data)
-    console.log(data)
+    console.log(data.length)
     if((uid==undefined && data==undefined)||(uid==null && data==null)||uid==null||data==null||data==undefined||uid==undefined){
-      return "Please Provide Data"
+      return {
+        message:"Please Provide Data",
+        status:401
+      }
     }
     else{
+      const lengths=data[9].length
+      const images=data[9].slice(11,lengths-1)
+      //console.log(`${images}`,"ghdsx")
+      const newimage= await image.compress_image(images)
+      //console.log(newimage)
+      data[9]=`userimage='${newimage}'`
+      console.log(data)
       const query=`UPDATE public."UserMaster"
       SET  ${data.join()}
       WHERE uid=${uid};`
-      console.log(query)
+      //console.log(query)
       const result=await db.query(query)
       return {
         "message":"Updated Success",
@@ -598,6 +651,7 @@ const createAnnotation=async(data)=>{
        VALUES ( '${data.projectid}', ${data.testno}, '${data.paraname}', '${data.paratimestamp}', '${data.remark}', ${data.createdbyuid}, '${data.createdbydate}', ${data.updatedbyid}, '${data.updatedbydate}');`
        //console.log(sql)
        const result=await db.query(sql)
+       console.log(result)
        return {
         "message":"Inserted Successfully",
         "Status":200
@@ -624,6 +678,7 @@ const updateAnnotation=async(data,anid)=>{
       SET ${data.join()}
       WHERE anid=${anid};`
       const result=await db.query(query)
+      console.log(result)
       return{
         "Message":"Updated Successfully",
         Status:200

@@ -15,25 +15,27 @@ const loginUser = async (req, res) => {
     if (user) {
       console.log(user)
     if(user["ustatus"]==true){
-        //console.log(user["userimage"])
-        //const image=user["userimage"]==null?'':Buffer.from(user["userimage"],'base64').toString('ascii')
-        // console.log(user)
+        console.log(user["userimage"])
+        const image=user["userimage"]==null?'':Buffer.from(user["userimage"],'base64').toString('ascii')
+        console.log(user)
          var data={
            "user":user["uname"],
            "roleid":user["roleid"],
            "role":user["rolename"],
            "uid":user["uid"],
-          // 'image':image
+           'image':image
    
          }
-         console.log(data)
+         console.log( data)
+         delete user.userimage
+         
          var token=jwt.sign(data,"IAMIRONMAN",{algorithm:"HS256",expiresIn:"30m"})
-         console.log(token)
+       //  console.log(token)
          req.session.token=token
          //const data={ success: true, message: 'Login successful', user ,"token":token}
          
          //console.log()
-         res.json({ success: true, message: 'Login successful', user ,"token":token});
+         res.send({ success: true, message: 'Login successful' ,user,"token":token});
       
     }
     else {

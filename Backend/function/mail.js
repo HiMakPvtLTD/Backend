@@ -2,8 +2,6 @@ var mail=require("nodemailer")
 require('dotenv').config();
 var db=require("../database/db")
 
-// const  sdk=require('api')('@msg91api/v5.0#6n91xmlhu4pcnz')
-// const sendotp=require("sendotp")
 var clinet=mail.createTransport({
     service:'gmail',
     auth:{
@@ -57,28 +55,9 @@ const Sms=async(mobile,body)=>{
     })
 
 }
-// const Sms=async()=>{
-//     try{
-//         const otp=new sendotp('417332A0rd4UWoTQ565e0a824P1')
-//         otp.send("7228831100")
-//         sdk.auth('417332A0rd4UWoTQ565e0a824P1')
-//         sdk.sendSms({
-//             template_id: 'EntertemplateID',
 
-//             short_url: '1 (On) or 0 (Off)',
-//             recipients: [{mobiles: '919898831672', VAR1: 'VALUE1', VAR2: 'VALUE2'}]
-//           })
-//             .then(( data ) => {
-//                 return data
-//             })
-//             .catch(err => console.error(err));
-           
-//     }
-//     catch(err){
-//         return err
-//     }
-// }
 module.exports={
     sendMail,
-    Sms
+    Sms,
+  
 }

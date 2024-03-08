@@ -1,6 +1,6 @@
 var excel=require("exceljs")
 const fs=require("fs")
-//var image=require("../function/image")
+var image=require("../function/image")
 const test=require("../models/test")
 const analysis=require("../models/Analysis.model")
 const dates=require("../function/date")
@@ -1054,7 +1054,7 @@ const GroupCExport=async(req,res)=>{
                     image:`data:image/jpeg;base64,${getaddress}`,
                     width:"750",
                     height:50,
-                    alignment:"center"
+                    alignment:"center",
                    
                 },
                 {text:""},

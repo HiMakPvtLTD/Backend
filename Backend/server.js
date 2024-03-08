@@ -56,7 +56,7 @@ app.use(cors())
 //    credentials: true,
 //   allowedHeaders: ['Content-Type', 'Authorization']
 // }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit:'5mb'}));
 
 app.use('/api', userRoutes);
 
