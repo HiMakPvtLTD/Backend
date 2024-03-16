@@ -6,6 +6,9 @@ const mails=require("../function/mail")
 const hash=require("../database/hash")
 const emailBody=require("../models/email.json")
 const image=require("../function/image")
+const bcrypt=require("bcrypt");
+const e = require('express');
+const saltrounds=10
 
 
 const getUserByUsernameAndPassword = async (uname, password) => {
@@ -28,22 +31,26 @@ const getUserByUsernameAndPassword = async (uname, password) => {
 //   try {
 //     const query = 'SELECT * FROM "UserMaster" as um join "RoleMaster" as rm on rm.roleid=um.roleid WHERE um."uname" = $1 ';
 
+//    // console.time()
 //     const result = await db.query(query, [uname]);
-//     const compare=await hash.comparePassword(password,result.rows[0].password)
-//     console.log(compare)
-
-//     if (result.rows.length!= 0) {
-      
+//     if(result.rows.length<=0){
+//       return null
+//     }
+//    // const compare=await bcrypt.compare(password,result.rows[0].password)
+//     //console.log(compare)
+//      const compare=true
+   
 //       if(compare){
-//         console.log(result.rows[0])
+//        // console.log(result.rows[0])
+//        // console.timeEnd()
+
 //         return result.rows[0]
 //       }
 //      else{
 //       return null
 //      }
-//     } else {
-//       return null;
-//     }
+    
+  
 //   } catch (error) {
 //     console.error('Error executing query:', error);
 //     throw error;
@@ -116,7 +123,8 @@ const changePassword=async(password,id,date)=>{
     var pass=""
 
     
-      //password=await hash.Createhash(password)  
+      //password=await bcrypt.hash(password,saltrounds)
+      console.log(password)
       const sql=`update "UserMaster" set password='${password}',updateddate='${date}' where uid='${id}'`
       const result= await db.query(sql)
        return result.rows
@@ -348,7 +356,20 @@ const UpdateUser=async(uid,data)=>{
       }
     }
     else{
-      const lengths=data[9].length
+      if(data.length<=2){
+        console.log(data)
+        const query=`UPDATE public."UserMaster"
+        SET  ${data.join()}
+        WHERE uid=${uid};`
+        //console.log(query)
+        const result=await db.query(query)
+        return {
+          "message":"Updated Success",
+          "status":200
+        }
+      }
+      else{
+        const lengths=data[9].length
       const images=data[9].slice(11,lengths-1)
       //console.log(`${images}`,"ghdsx")
       const newimage= await image.compress_image(images)
@@ -363,6 +384,7 @@ const UpdateUser=async(uid,data)=>{
       return {
         "message":"Updated Success",
         "status":200
+      }
       }
     }
     

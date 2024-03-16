@@ -111,6 +111,20 @@ const getMainDashboardData = async () => {
     return result.rows
 
   }
+
+  const GetCurrentTestBenchDetails=async(benchno)=>{
+    try{
+      const query=`select tbr."Status",pm."ProjectName",pm."ProjectNo",pm."ProjectType",pm."ProjectId",tbr."TestRunCount",pm."Group",pm."ProjectOwner",pm."ProjectConfig",tbr."TestBenchId" from "TestBenchCurrentStatus" tbr
+      join "ProjectMaster" pm on tbr."ProjectId"=pm."ProjectId" Where tbr."TestBenchId"=${benchno}`
+      console.log(query)
+      const result=await db.query(query)
+      return result.rows
+
+    }
+    catch(err){
+      return err
+    }
+  }
   //Get TestBenchDetails Status and Time in Hours by project Id
   const ProjectTotalRunTime=async(projectid)=>{
     // const query=`Select (SELECT "StartDateTime"
@@ -162,6 +176,6 @@ const getMainDashboardData = async () => {
 
 
   module.exports = { 
-    getMainDashboardData , getPlcStatusData,TestBenchRunningIdle,Last5Bench,TestObjectCount,TestbenchDetails,getProjectDetials,ProjectTotalRunTime,getChartData,TankStatus,dummy
+    getMainDashboardData , GetCurrentTestBenchDetails,getPlcStatusData,TestBenchRunningIdle,Last5Bench,TestObjectCount,TestbenchDetails,getProjectDetials,ProjectTotalRunTime,getChartData,TankStatus,dummy
   };
   

@@ -62,6 +62,7 @@ router.get("/testBenchCount",dashboardController.getTestBenchStatusCount)
 router.get("/getLast5Bench",dashboardController.Last5BechData)
 router.get("/getObjectCount",dashboardController.GetTestObjectCount)
 router.get("/testBenchDetails",dashboardController.TestbenchDetails)
+router.post("/getCurrentBenchDetails",dashboardController.GetCurrentTestBenchDetails)
 router.post("/getProjectDetails",dashboardController.getProjectDetails)
 router.post("/getListView",dashboard2.getListView)
 router.post("/getProjectTime",dashboardController.getProjectTime)
@@ -91,9 +92,9 @@ router.post("/getAggregateAmbiant",analysis.GetAggregateAmbiant)
 
 
 //For Testing Purpose
-router.post("/dumb2",analysis.GetGroupvsSeries)
+router.post("/getGroupvsSeries",analysis.GetGroupvsSeries)
 
-router.post("/dumb3",analysis.GetGroupvsambiant)
+router.post("/getGroupvsAmbiant",analysis.GetGroupvsambiant)
 
 
 //Send Mail from Node-red

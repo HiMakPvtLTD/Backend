@@ -2,6 +2,10 @@
 const userModel = require('../models/user.model');
 const nodered=require("../models/node-red")
 var jwt=require("jsonwebtoken")
+var crypto=require("crypto-js")
+var base64=require("crypto-js/enc-base64")
+const zlib=require("zlib")
+
 
 
 
@@ -13,9 +17,9 @@ const loginUser = async (req, res) => {
 
 
     if (user) {
-      console.log(user)
+      //console.log(user)
     if(user["ustatus"]==true){
-        console.log(user["userimage"])
+       // console.log(user["userimage"])
         const image=user["userimage"]==null?'':Buffer.from(user["userimage"],'base64').toString('ascii')
         console.log(user)
          var data={
@@ -23,11 +27,16 @@ const loginUser = async (req, res) => {
            "roleid":user["roleid"],
            "role":user["rolename"],
            "uid":user["uid"],
-           'image':image
+           "remoteoperation":user["remoteoperation"],
+           "runningproject":user['runningprojectdash'],
+           image:image
+           
    
          }
-         console.log( data)
+        // console.log( data)
          delete user.userimage
+         delete user.password
+
          
          var token=jwt.sign(data,"IAMIRONMAN",{algorithm:"HS256",expiresIn:"30m"})
        //  console.log(token)
@@ -35,7 +44,7 @@ const loginUser = async (req, res) => {
          //const data={ success: true, message: 'Login successful', user ,"token":token}
          
          //console.log()
-         res.send({ success: true, message: 'Login successful' ,user,"token":token});
+         res.send({ success: true, message: 'Login successful' ,"token":token});
       
     }
     else {
@@ -197,6 +206,7 @@ const UpdateUser=async(req,res)=>{
   try{
     const uid=req.body.id
     const data=req.body.data
+    console.log(req.body.id)
     const response=await userModel.UpdateUser(uid,data)
     if(response){
       res.send(response)

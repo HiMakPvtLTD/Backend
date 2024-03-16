@@ -20,9 +20,9 @@ const Createhash=async(password)=>{
   const hash=await bcrypt.hash(password,salt)
   return hash
    }
-   const comparePassword=async(password,buffer)=>{
-    const compare=await bcrypt.compare(password,buffer)
-    return compare
+const comparePassword=async(password,buffer)=>{
+const compare=await bcrypt.compare(password,buffer)
+return compare
    }
    
 

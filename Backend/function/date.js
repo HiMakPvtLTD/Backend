@@ -48,7 +48,7 @@ var toSec=(secs)=>{
     const hours=Math.floor(secs/3600)
     const min=Math.floor((secs%3600)/60)
     const sec=Math.floor(secs%60)
-    return `${hours}h:${min}m:${sec}s`
+    return `${hours}H:${min}M:${sec}S`
 }
 var getDate=()=>{
     var date=new Date()

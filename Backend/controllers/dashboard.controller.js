@@ -8,6 +8,10 @@ const getMainDashboardData = async (req, res) => {
 
     try {
       const dashData = await dashboardModel.getMainDashboardData(); 
+      //const headers=req.getHeaders()
+      //const contenttype=headers["Content-Type"]
+      //const size=contenttype.length
+      //console.log(length)
       
       //console.log(req.headers)
       // var token=verify.verify(req.headers.authorization)
@@ -329,10 +333,27 @@ const getMainDashboardData = async (req, res) => {
 
     }
   }
+  const GetCurrentTestBenchDetails=async(req,res)=>{
+    try{
+      const benchno=req.body.id
+      console.log(req.body)
+      const data=await dashboardModel.GetCurrentTestBenchDetails(benchno)
+      if(data){
+        res.send(data)
+      }
+      else{
+        res.send("No Data Available")
+      }
+
+    }
+    catch(err){
+      res.send(err)
+    }
+  }
   
   
 
   
 
   
-  module.exports = { getMainDashboardData, dummy ,getPlcStatusData,getTestBenchStatusCount,Last5BechData,GetTestObjectCount,TestbenchDetails,getProjectDetails,getChartData,getTakStatus,getProjectTime };
+  module.exports = { getMainDashboardData, dummy ,GetCurrentTestBenchDetails,getPlcStatusData,getTestBenchStatusCount,Last5BechData,GetTestObjectCount,TestbenchDetails,getProjectDetails,getChartData,getTakStatus,getProjectTime };
