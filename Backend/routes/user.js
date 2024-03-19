@@ -91,7 +91,7 @@ router.post("/getAggregateSeries",analysis.GetAggregateSeries)
 router.post("/getAggregateAmbiant",analysis.GetAggregateAmbiant)
 
 
-//For Testing Purpose
+//For aggregate Purpose
 router.post("/getGroupvsSeries",analysis.GetGroupvsSeries)
 
 router.post("/getGroupvsAmbiant",analysis.GetGroupvsambiant)
@@ -103,8 +103,7 @@ router.post("/sms",node.sms)
 
 //Excel Report
 router.post("/GetSeriesReport",Report.getTimeSeriesReport)
-router.post("/getPdf",Report.TestPdf)
-
+// router.post("/getPdf",Report.TestPdf)
 router.post("/getAmbiantReport",Report.getAmbiantReport)
 router.post("/getTestReport",Report.GroupCExport)
 router.post("/getTankReport",Report.getTankReport)

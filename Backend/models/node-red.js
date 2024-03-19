@@ -11,32 +11,57 @@ var clinet=mail.createTransport({
 })
 
 
+// const sendMailtored=async(email,subject,data)=>{
+//     //var otp=Math.floor(Math.random()*1000000)
+//     var message=""
+//     var sendmail={
+//         from:'automail.erp@himak.in',
+//         to:email,
+//         subject:subject,
+//         text:data
+
+//     }
+//     return new Promise((resolve,reject)=>{
+//         clinet.sendMail(sendmail,(err,res)=>{
+//             if(err) reject(err) 
+//             message={
+//                 "Message":"Sent Successfully"
+//             }
+//             ///console.log(res)
+//             resolve(message)
+//            // console.log(res)
+    
+    
+//         })
+//     })
+    
+
+
+// }
+
 const sendMailtored=async(email,subject,data)=>{
-    //var otp=Math.floor(Math.random()*1000000)
-    var message=""
-    var sendmail={
-        from:'automail.erp@himak.in',
-        to:email,
-        subject:subject,
-        text:data
+    try{
+        var query='select * from "Tokens" where "ID"=2'
+        const result=await db.query(query)
+        var {AuthToken}=result.rows[0]
+        var sgmail=require("@sendgrid/mail")
+        const message={
+            from:"iotlab@idexcorp.com",
+            to:email,
+            subject:subject,
+            text:data
+        }
+        sgmail.setApiKey(AuthToken)
+        var sentmail=await sgmail.send(message)
+        return {
+            status:"200",
+            "Message":"Mail Sent Successfully !!!"
+        }
 
     }
-    return new Promise((resolve,reject)=>{
-        clinet.sendMail(sendmail,(err,res)=>{
-            if(err) reject(err) 
-            message={
-                "Message":"Sent Successfully"
-            }
-            ///console.log(res)
-            resolve(message)
-           // console.log(res)
-    
-    
-        })
-    })
-    
-
-
+    catch(err){
+        return err
+    }
 }
 const Sms=async(mobile,message)=>{
     var query='select * from "Tokens" where "ID"=1'

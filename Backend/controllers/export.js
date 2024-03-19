@@ -1023,62 +1023,62 @@ const GroupCExport=async(req,res)=>{
 
 
 // }
-      const TestPdf=async(req,res)=>{
+//       const TestPdf=async(req,res)=>{
     
    
    
 
 
-    const from=req.body.start
-    const to =req.body.end
-    const needvar=req.body.data
-    console.log(req.body)
-    const data=await analysis.getMasterAmbientdata(from,to,needvar)
-   // console.log(data[0])
-        const getaddress= await image.base64_encode()
+//     const from=req.body.start
+//     const to =req.body.end
+//     const needvar=req.body.data
+//     console.log(req.body)
+//     const data=await analysis.getMasterAmbientdata(from,to,needvar)
+//    // console.log(data[0])
+//         const getaddress= await image.base64_encode()
         
-        console.log(getaddress.slice(1,10))
-        const table=[]
-        const tablehead=Object.keys(data[0]).map(item=>headjson[4][item])
-        table.push(tablehead)
-        //const values=[]
-        data.map((item)=>{
-            item["DateTime"]=dates.convertDateFormat(new Date(item["DateTime"]))
-            const valu=Object.values(item)
-            table.push(valu)
-        })
-        const doc={
-            pageSize:'A3',
-            content:[
-                {
-                    image:`data:image/jpeg;base64,${getaddress}`,
-                    width:"750",
-                    height:50,
-                    alignment:"center",
+//         console.log(getaddress.slice(1,10))
+//         const table=[]
+//         const tablehead=Object.keys(data[0]).map(item=>headjson[4][item])
+//         table.push(tablehead)
+//         //const values=[]
+//         data.map((item)=>{
+//             item["DateTime"]=dates.convertDateFormat(new Date(item["DateTime"]))
+//             const valu=Object.values(item)
+//             table.push(valu)
+//         })
+//         const doc={
+//             pageSize:'A3',
+//             content:[
+//                 {
+//                     image:`data:image/jpeg;base64,${getaddress}`,
+//                     width:"750",
+//                     height:50,
+//                     alignment:"center",
                    
-                },
-                {text:""},
-                {
-                    text:"Test Report",
-                    fontSize:18,
-                    alignment: 'center',
-                    bold:true,
-                    margin:[0,0,0,0]
-                },
-                {text:""},
-                {
-                    table:{
-                        headerRows:1,
-                        body:table
-                    }
-                }
-            ]
-        }
-        const pdfdoc=pdfMake.createPdf(doc)
-        pdfdoc.getBuffer((buffer)=>{
-            res.attachment(`example.pdf`);
-            res.end(buffer)
-        })
+//                 },
+//                 {text:""},
+//                 {
+//                     text:"Test Report",
+//                     fontSize:18,
+//                     alignment: 'center',
+//                     bold:true,
+//                     margin:[0,0,0,0]
+//                 },
+//                 {text:""},
+//                 {
+//                     table:{
+//                         headerRows:1,
+//                         body:table
+//                     }
+//                 }
+//             ]
+//         }
+//         const pdfdoc=pdfMake.createPdf(doc)
+//         pdfdoc.getBuffer((buffer)=>{
+//             res.attachment(`example.pdf`);
+//             res.end(buffer)
+//         })
 
 
      
@@ -1094,12 +1094,12 @@ const GroupCExport=async(req,res)=>{
 
 
 
-}
+// }
 
 module.exports={
     getTimeSeriesReport,
     getAmbiantReport,
     getTankReport,
     GroupCExport,
-    TestPdf
+    
 }

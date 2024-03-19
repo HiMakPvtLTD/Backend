@@ -11,6 +11,7 @@ const zlib=require("zlib")
 
 const loginUser = async (req, res) => {
   const { uname, password } = req.body;
+  console.log(req.body)
 
   try {
     const user = await userModel.getUserByUsernameAndPassword(uname, password);
