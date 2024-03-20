@@ -8,25 +8,27 @@ const timeSeriesbyId=async(req,res)=>{
         const no=req.body.no
         const start=req.body.start
         const end=req.body.end
-       // console.log(req.body)
+        const config=req.body.projectConfig
+        console.log(req.body)
         //console.log(no)
         var time=""
-    const data= await timeseries.TimeSeriesData(id,no)
+    const data= await timeseries.TimeSeriesData(id,no,config)
+    console.log(data)
     if(data){
         if(data.length>=1){
-            data[0].Test=data[0].Act_TestRunTime
+           // data[0].Test=data[0].Act_TestRunTime
             data[0].DateTime=new Date(data[0].DateTime)
             //time=`${data[0].EndTestRunTimeDay}D :${data[0].EndTestRunTimeHour}H:${data[0].EndTestRunTimeMin}`
     
            if(no!=0){
             if(data[0].ProjectConfig=="Performance"){
-                time=dat.toSec(data[1].Act_TestRunTime)
+                time=dat.toSec(data[0].Act_TestRunTime)
                 //console.log(time,data[1].Act_TestRunTime)
     
             }
             else{
-                time=`${data[1].EndTestRunTimeDay}D : ${data[1].EndTestRunTimeHour}H : ${Math.round(Number(data[1].EndTestRunTimeMin)+Number(data[1].Act_TestRunTime/60))}M`
-                 console.log(Number(data[1].Act_TestRunTime/60))
+                time=`${data[0].EndTestRunTimeDay}D : ${data[0].EndTestRunTimeHour}H : ${Math.round(Number(data[0].EndTestRunTimeMin)+Number(data[0].Act_TestRunTime/60))}M`
+                 console.log(Number(data[0].Act_TestRunTime/60))
             //    // console.log(time)
             }
             const testRuntime=time

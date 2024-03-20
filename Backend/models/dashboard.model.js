@@ -133,7 +133,7 @@ const getMainDashboardData = async () => {
     const query=`Select *from gettotalprojectruntime where "ProjectId"=${projectid} order by "TestNo" desc limit 1 `
     //console.log(query)
     const result=await db.query(query)
-    console.log(result.rows)
+  //  console.log(result.rows)
    // const date=new Date()
     //const datatime=result.rows[0].StartDateTime
     const enddate=result.rows[0].diff*60

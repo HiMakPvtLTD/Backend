@@ -1,13 +1,15 @@
 var db=require("../database/db")
 var dashboard=require("../models/dashboard.model")
 var table=require("../function/table")
+const { config } = require("dotenv")
 
 
-const TimeSeriesData=async(projectID,no)=>{
+const TimeSeriesData=async(projectID,no,config)=>{
     try{
         var start=""
         var end=""
         var query=''
+        var query2=''
       //  console.log(no)
         if(no>=1){
             // query=`SELECT tsd. "DateTime", tsd."MotorKWH", tsd."StrokeCount", tsd."FcvSP", tsd."Act_MotorRPM",tsd. "MotorAMP",tsd. "MotorKW", tsd."FlowGrav", tsd."MotorKwhTest",
@@ -18,7 +20,18 @@ const TimeSeriesData=async(projectID,no)=>{
             //     tsd."PumpRPM", tsd."GravMagSel" ,pm."ProjectConfig",tsd."FlowScaleMin", tsd."FlowScaleMax",tsd."DischargePTScaleMin", tsd."DischargePTScaleMax" 
             //     FROM public."TimeseriesData" tsd right join "ProjectMaster" pm on tsd."ProjectId"=pm."ProjectId" where tsd."ProjectId"='${projectID}' and tsd."TestNo"=${no} 
             // order by tsd."DateTime" Desc limit 20`
-            query=`select * from timeseriesdata where "ProjectId"='${projectID}' and "TestNo"=${no} limit 2`
+          if(config=="Performance"){
+          
+            const maxquery=`select Max("Act_TestRunTime") as maxTestruntime from timeseriesdata where "ProjectId"='${projectID}' and "TestNo"=${no} limit 1 `
+            const response=await db.query(maxquery)
+            const maxvalue=response.rows[0].maxtestruntime
+            query=`select * from timeseriesdata where "ProjectId"='${projectID}' and "TestNo"=${no} and "Act_TestRunTime"=${maxvalue} limit 1`
+
+          }
+          else if(config=="Endurance"){
+            query=`select * from timeseriesdata where "ProjectId"='${projectID}' and "TestNo"=${no}  and "LogBit"='true' limit 1`
+
+          }
            
         }
         else if(no==0||no==null||no==undefined){
@@ -40,15 +53,26 @@ const TimeSeriesData=async(projectID,no)=>{
         //      from "TimeseriesData" where "ProjectId"='${projectID}' group by "TestNo","ProjectId" order by "TestNo" desc
         //     ) select * from demo as d left join testdate as ts on ts."ProjectId"=d."ProjectId" and d."TestNo"=ts."TestNo" where ts."StartDateTime" is not Null order by d."TestNo" desc  `
 
+
+        if(config=="Performance"){
                 query=`			with testdate as (
                     select min("StartDateTime")as "StartDateTime",max("EndDateTime") as "EndDateTime","ProjectId","TestNo" from "TestRunData" group by "ProjectId","TestNo" order by "TestNo" desc
                     ),
                      Demo as(
                          select Row_Number() over (Partition by "TestNo" order by "DateTime" desc) as a, Round("Act_TestRunTime"/60) as Act_TestRunTime ,Round(("EndTestRunTimeMin")+("EndTestRunTimeHour")*60+("EndTestRunTimeDay")*1440+("Act_TestRunTime"/60.0)) as endurance,* from "TimeseriesData" where "ProjectId"='${projectID}'     order by "DateTime" desc 
-                            ) Select *from Demo  left join testdate ts on Demo."ProjectId"=ts."ProjectId" and Demo."TestNo"=ts."TestNo"  where a=2 and ts."StartDateTime" is not Null order by Demo."TestNo" desc `
+                            ) Select *from Demo  left join testdate ts on Demo."ProjectId"=ts."ProjectId" and Demo."TestNo"=ts."TestNo"  where a=1 and ts."StartDateTime" is not Null order by Demo."TestNo" desc `
         }
-        
-        //console.log(query)
+        else if(config=="Endurance"){
+            query=`			with testdate as (
+                select min("StartDateTime")as "StartDateTime",max("EndDateTime") as "EndDateTime","ProjectId","TestNo" from "TestRunData" group by "ProjectId","TestNo" order by "TestNo" desc
+                ),
+                 Demo as(
+                     select Row_Number() over (Partition by "TestNo" order by "DateTime" desc) as a, Round("Act_TestRunTime"/60) as Act_TestRunTime ,Round(("EndTestRunTimeMin")+("EndTestRunTimeHour")*60+("EndTestRunTimeDay")*1440+("Act_TestRunTime"/60.0)) as endurance,* from "TimeseriesData" where "ProjectId"='${projectID}'  and "LogBit"='true'    order by "DateTime" desc 
+                        ) Select *from Demo  left join testdate ts on Demo."ProjectId"=ts."ProjectId" and Demo."TestNo"=ts."TestNo"  where a=1 and ts."StartDateTime" is not Null order by Demo."TestNo" desc `
+
+        }
+    }
+        console.log(query)
         const result=await db.query(query)
         return result.rows
     }
