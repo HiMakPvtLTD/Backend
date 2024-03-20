@@ -45,14 +45,19 @@ const sendMailtored=async(email,subject,data)=>{
         const result=await db.query(query)
         var {AuthToken}=result.rows[0]
         var sgmail=require("@sendgrid/mail")
+        var testmail=email.split(";")
+        testmail.pop()
+        console.log(testmail)
+
         const message={
             from:"iotlab@idexcorp.com",
-            to:email,
+            to:testmail,
             subject:subject,
             text:data
         }
         sgmail.setApiKey(AuthToken)
         var sentmail=await sgmail.send(message)
+        console.log(sentmail)
         return {
             status:"200",
             "Message":"Mail Sent Successfully !!!"

@@ -66,13 +66,13 @@ app.use(bodyParser.json({limit:'5mb'}));
 app.use('/api', userRoutes);
 
 
-const httpserver=http.createServer({
-  key:fs.readFileSync("./keys/privatekey.pem",'utf8'),
-  cert:fs.readFileSync("./keys/691fa35bf7aa7828.crt",'utf-8')
-},app).listen(port,()=>{
-  console.log("Server Started")
-})
-httpserver.maxHeaderSize=32*1024
+// const httpserver=http.createServer({
+//   key:fs.readFileSync("./keys/privatekey.pem",'utf8'),
+//   cert:fs.readFileSync("./keys/691fa35bf7aa7828.crt",'utf-8')
+// },app).listen(port,()=>{
+//   console.log("Server Started")
+// })
+// httpserver.maxHeaderSize=32*1024
 
 
 // app.listen(port,() => {
@@ -80,7 +80,7 @@ httpserver.maxHeaderSize=32*1024
 // });
 
 
-// app.server=app.listen(port,'192.168.4.203',() => {
-//   console.log(`Server is running on port ${port}`);
-// });
-// app.server.maxHeaderSize=32*1048
+app.server=app.listen(port,'192.168.4.203',() => {
+  console.log(`Server is running on port ${port}`);
+});
+app.server.maxHeaderSize=32*1048
