@@ -20,7 +20,7 @@ const timeSeriesbyId=async(req,res)=>{
     
            if(no!=0){
             if(data[0].ProjectConfig=="Performance"){
-                time=dat.toSec(data[0].Act_TestRunTime)
+                time=dat.toSec(data[1].Act_TestRunTime)
                 //console.log(time,data[1].Act_TestRunTime)
     
             }
