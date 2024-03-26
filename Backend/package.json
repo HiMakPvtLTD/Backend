@@ -17,7 +17,8 @@
     "nodemon": "^3.0.2",
     "pdfmake": "^0.2.9",
     "pg": "^8.11.3",
-    "twilio": "^4.23.0"
+    "twilio": "^4.23.0",
+    "uuid": "^9.0.1"
   },
   "scripts": {
     "start": "nodemon server.js"

@@ -126,17 +126,71 @@ const getMainDashboardData = async () => {
     }
   }
   //Get TestBenchDetails Status and Time in Hours by project Id
-  const ProjectTotalRunTime=async(projectid)=>{
+
+
+
+
+  // const ProjectTotalRunTime=async(projectid)=>{
+  //   // const query=`Select (SELECT "StartDateTime"
+  //   // FROM public."TestRunData" where "ProjectId"='${projectid}' order by "StartDateTime" limit 1 ),(SELECT  "EndDateTime"
+  //   // FROM public."TestRunData" where "ProjectId"='${projectid}' order by "EndDateTime" desc limit 1 )`
+  //   const query=`Select *from gettotalprojectruntime where "ProjectId"=${projectid} order by "TestNo" desc limit 1 `
+  //  // const query=`select sum(EXTRACT(epoch FROM "TestRunData"."EndDateTime" - "TestRunData"."StartDateTime") / 60::numeric) as diff from "TestRunData" where "ProjectId"='${projectid}'`
+  //   //console.log(query)
+  //   const result=await db.query(query)
+  // //  console.log(result.rows)
+  //  // const date=new Date()
+  //   //const datatime=result.rows[0].StartDateTime
+  //   const enddate=result.rows[0].diff*60
+  //   console.log(enddate)
+  //   //const difference=Math.abs(datatime-enddate)/1000
+  //   //console.log(difference)
+  //   const days=Math.floor(enddate/(3600*24))
+  //   const hours=Math.floor(enddate%(3600*24)/3600)
+  //   const min=Math.floor((enddate%3600)/60)
+  //   const sec=Math.floor(enddate%60)
+  //   //console.log()
+  //   const data={
+  //     "Status":result.rows[0].Status,
+  //     "Time":`${days}D : ${hours}H : ${min}M`
+  //   }
+  //   return data
+    
+  // }
+
+
+
+  const ProjectTotalRunTime=async(projectid,no)=>{
+    //no=9
     // const query=`Select (SELECT "StartDateTime"
     // FROM public."TestRunData" where "ProjectId"='${projectid}' order by "StartDateTime" limit 1 ),(SELECT  "EndDateTime"
     // FROM public."TestRunData" where "ProjectId"='${projectid}' order by "EndDateTime" desc limit 1 )`
-    const query=`Select *from gettotalprojectruntime where "ProjectId"=${projectid} order by "TestNo" desc limit 1 `
+   // const query=`Select *from gettotalprojectruntime where "ProjectId"=${projectid} order by "TestNo" desc limit 1 `
+    //const query=`select sum(EXTRACT(epoch FROM "TestRunData"."EndDateTime" - "TestRunData"."StartDateTime") / 60::numeric) as diff from "TestRunData" where "ProjectId"='${projectid}'`
+    const query=`	WITH main_query AS (
+      SELECT
+          CASE
+              WHEN ${no} NOT IN (SELECT "TestNo" FROM "TestRunData" where "ProjectId"='${projectid}') THEN
+        
+      (select (select (floor("Act_TestRunTime"/60)+"EndTestRunTimeMin"+floor("EndTestRunTimeDay")*1440+floor("EndTestRunTimeHour")*60) as totaltime  from "TimeseriesData" where "ProjectId"='${projectid}' and "TestNo"='${no}' order by "DateTime" desc limit 1  
+  )+(select sum(EXTRACT(epoch FROM "TestRunData"."EndDateTime" - "TestRunData"."StartDateTime") / 60::numeric) from "TestRunData" where "ProjectId"='${projectid}') as diff
+    )
+      ELSE
+                ( select sum(EXTRACT(epoch FROM "TestRunData"."EndDateTime" - "TestRunData"."StartDateTime") / 60::numeric) from "TestRunData" where "ProjectId"='${projectid}')
+          END AS diff
+  )
+  SELECT * FROM main_query;
+    `
     //console.log(query)
     const result=await db.query(query)
-  //  console.log(result.rows)
+    console.log(result)
+    if(result.rows[0].diff!=null){
+      console.log(1)
+ //  console.log(result.rows)
    // const date=new Date()
     //const datatime=result.rows[0].StartDateTime
     const enddate=result.rows[0].diff*60
+    console.log(enddate)
     //const difference=Math.abs(datatime-enddate)/1000
     //console.log(difference)
     const days=Math.floor(enddate/(3600*24))
@@ -149,6 +203,28 @@ const getMainDashboardData = async () => {
       "Time":`${days}D : ${hours}H : ${min}M`
     }
     return data
+    }else{
+      console.log(2)
+         const query=`select sum(EXTRACT(epoch FROM "TestRunData"."EndDateTime" - "TestRunData"."StartDateTime") / 60::numeric) as diff from "TestRunData" where "ProjectId"='${projectid}'`
+         const result=await db.query(query)
+
+     const enddate=result.rows[0].diff*60
+    console.log(enddate)
+    //const difference=Math.abs(datatime-enddate)/1000
+    //console.log(difference)
+    const days=Math.floor(enddate/(3600*24))
+    const hours=Math.floor(enddate%(3600*24)/3600)
+    const min=Math.floor((enddate%3600)/60)
+    const sec=Math.floor(enddate%60)
+    //console.log()
+    const data={
+      "Status":result.rows[0].Status,
+      "Time":`${days}D : ${hours}H : ${min}M`
+    }
+    return data
+    
+        }
+ 
     
   }
   //Get Time Series Data By Project Id

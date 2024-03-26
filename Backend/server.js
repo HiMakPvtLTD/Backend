@@ -6,6 +6,7 @@ const fs=require("fs")
 const cors = require('cors');
 const helmet=require('helmet')
 const compression=require('compression')
+const head=require("./controllers/header")
 //const privatekey=fs.readFileSync('./ss')
 
 const userRoutes = require('./routes/user');
@@ -24,22 +25,36 @@ app.use(compression(
     threshold: 0
   }
 ))
+app.use(cors())
 //app.use(express.compress())
 
-// app.use((req,res,next)=>{
-//   console.log(req.headers)
-  
-//   if(req.headers["Authorization"]==="Helloworld"){
-//     next()
-//   }
-//   else{
-//     res.send({
-//       status:401,
-//       message:"UnAuthorized User"
-//     })
+app.use((req,res,next)=>{
+ // console.log(req.path)
 
-//   }
-// })
+  if(req.path=="/api/login"||req.path=="/api/forgotpass"||req.path=="/api/changePassword"){
+    next()
+  }else{
+    //console.log(req.headers)
+    const token=req.headers["authorization"]==undefined?"":req.headers["authorization"]
+    //console.log(token)
+    head.checkSession(token).then((ress)=>{
+      //console.log(ress)
+      if(ress.status==200){
+        next()
+      }
+      else{
+        res.status(401).send({
+          status:401,
+          message:"UnAuthorized User"
+        })
+    
+      }
+    })
+    //console.log(status)
+    
+  }
+  
+})
 
 // const date=new Date()
 
@@ -55,7 +70,7 @@ app.use(sessions)
 //   next();
 // });
 
-app.use(cors())
+
 
 // app.use(cors({
 //    credentials: true,

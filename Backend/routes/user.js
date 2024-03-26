@@ -10,6 +10,7 @@ const maintenance=require("../controllers/maintenance")
 const node=require("../controllers/node-red")
 const Report=require("../controllers/export")
 const getdata=require("../controllers/testing")
+const head=require("../controllers/header")
 const router = express.Router();
 const cors = require('cors');
 const body=require("body-parser")
@@ -52,6 +53,7 @@ router.post("/UpdateAnnotation",userController.UpdateAnnotation)
 router.post("/SelectAnnotation",userController.SelectAnnotaionbyid)
 router.post("/DeleteAnnotation",userController.DeleteAnnotaion)
 router.post ("/GetAllAnnotation",userController.SelectAllAnnotaion)
+router.post("/clearHeader",head.clearToken)
 
 //get Data For Main Dashboard
 router.post('/main-dashboard', dashboardController.getMainDashboardData);

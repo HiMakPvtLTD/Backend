@@ -289,8 +289,8 @@ const getMainDashboardData = async (req, res) => {
   const getProjectTime=async(req,res)=>{
     try{
       const id=req.body.id
-      //const no=req.body.no
-      const data=await dashboardModel.ProjectTotalRunTime(id)
+      const no=req.body.no
+      const data=await dashboardModel.ProjectTotalRunTime(id,no)
       if(data){
        // console.log(data)
         res.send(data)

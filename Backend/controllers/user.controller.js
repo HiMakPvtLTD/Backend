@@ -5,6 +5,7 @@ var jwt=require("jsonwebtoken")
 var crypto=require("crypto-js")
 var base64=require("crypto-js/enc-base64")
 const zlib=require("zlib")
+const sessionid=require("../controllers/header")
 
 
 
@@ -22,7 +23,8 @@ const loginUser = async (req, res) => {
     if(user["ustatus"]==true){
        // console.log(user["userimage"])
         const image=user["userimage"]==null?'':Buffer.from(user["userimage"],'base64').toString('ascii')
-        console.log(user)
+        const head=await sessionid.createsession()
+        //console.log(user)
          var data={
            "user":user["uname"],
            "roleid":user["roleid"],
@@ -30,7 +32,8 @@ const loginUser = async (req, res) => {
            "uid":user["uid"],
            "remoteoperation":user["remoteoperation"],
            "runningproject":user['runningprojectdash'],
-           image:image
+           image:image,
+           sessionid:head
            
    
          }

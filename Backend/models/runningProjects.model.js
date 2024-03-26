@@ -59,7 +59,7 @@ const TimeSeriesData=async(projectID,no,config)=>{
                     select min("StartDateTime")as "StartDateTime",max("EndDateTime") as "EndDateTime","ProjectId","TestNo" from "TestRunData" group by "ProjectId","TestNo" order by "TestNo" desc
                     ),
                      Demo as(
-                         select Row_Number() over (Partition by "TestNo" order by "DateTime" desc) as a, Round("Act_TestRunTime"/60) as Act_TestRunTime ,Round(("EndTestRunTimeMin")+("EndTestRunTimeHour")*60+("EndTestRunTimeDay")*1440+("Act_TestRunTime"/60.0)) as endurance,* from "TimeseriesData" where "ProjectId"='${projectID}'     order by "DateTime" desc 
+                         select Row_Number() over (Partition by "TestNo" order by "DateTime" desc) as a, Round("Act_TestRunTime"/60) as Act_TestRunTime ,Round(("EndTestRunTimeMin")+("EndTestRunTimeHour")*60+("EndTestRunTimeDay")*1440+("Act_TestRunTime"/60.0)) as endurance,* from "TimeseriesData" where "ProjectId"='${projectID}' and "Act_TestRunTime"!=0     order by "DateTime" desc 
                             ) Select *from Demo  left join testdate ts on Demo."ProjectId"=ts."ProjectId" and Demo."TestNo"=ts."TestNo"  where a=1 and ts."StartDateTime" is not Null order by Demo."TestNo" desc `
         }
         else if(config=="Endurance"){

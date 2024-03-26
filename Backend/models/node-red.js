@@ -48,7 +48,7 @@ const sendMailtored=async(email,subject,data)=>{
         var testmail=email.split(";")
         testmail.pop()
         console.log(testmail)
-
+ 
         const message={
             from:"iotlab@idexcorp.com",
             to:testmail,

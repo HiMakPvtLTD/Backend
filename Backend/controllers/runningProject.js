@@ -13,7 +13,7 @@ const timeSeriesbyId=async(req,res)=>{
         //console.log(no)
         var time=""
     const data= await timeseries.TimeSeriesData(id,no,config)
-    console.log(data)
+    //console.log(data)
     if(data){
         if(data.length>=1){
            // data[0].Test=data[0].Act_TestRunTime
