@@ -181,15 +181,16 @@ const getMainDashboardData = async () => {
   )
   SELECT * FROM main_query;
     `
-    //console.log(query)
+   // console.log(query)
     const result=await db.query(query)
-    console.log(result)
+    console.log(result.rows[0].diff)
     if(result.rows[0].diff!=null){
       console.log(1)
  //  console.log(result.rows)
    // const date=new Date()
     //const datatime=result.rows[0].StartDateTime
-    const enddate=result.rows[0].diff*60
+
+    const enddate=Math.round(result.rows[0].diff)*60
     console.log(enddate)
     //const difference=Math.abs(datatime-enddate)/1000
     //console.log(difference)
@@ -208,7 +209,10 @@ const getMainDashboardData = async () => {
          const query=`select sum(EXTRACT(epoch FROM "TestRunData"."EndDateTime" - "TestRunData"."StartDateTime") / 60::numeric) as diff from "TestRunData" where "ProjectId"='${projectid}'`
          const result=await db.query(query)
 
-     const enddate=result.rows[0].diff*60
+      if (result.rows[0].diff==null){
+        return []
+      }
+     const enddate=Math.round(result.rows[0].diff)*60
     console.log(enddate)
     //const difference=Math.abs(datatime-enddate)/1000
     //console.log(difference)
