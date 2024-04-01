@@ -21,7 +21,7 @@ pdfMake.vfs=pdffont.pdfMake.vfs
 
 
 
-const getTimeSeriesReport1= async (req,res)=>{
+const getTimeSeriesReport= async (req,res)=>{
     try{
         const head=req.body.headers
         const value=req.body.value
@@ -184,9 +184,15 @@ const getTimeSeriesReport1= async (req,res)=>{
                     item["DateTime"]=dates.convertDateFormat(item["DateTime"])
                     item["TestNo"]=`${item["TestNo"]}`
                     if(type=="AODD"){
-                        item["StrokeCount"]=`${item["StrokeCount"]}`
-                        item["StrokeCountRate"]=`${item["StrokeCountRate"]}`
-                    }
+                        if(item.hasOwnProperty("StrokeCount")){
+                         item["StrokeCount"]=`${item["StrokeCount"]}`
+                        }
+                        if(item.hasOwnProperty("StrokeCountRate")){
+                         item["StrokeCountRate"]=`${item["StrokeCountRate"]}`
+                        }
+                       
+                      
+                     }
                     const values = Object.values(item);
                     if(index==1){
                         console.log(item)
@@ -246,7 +252,7 @@ const getTimeSeriesReport1= async (req,res)=>{
     }
 }
 
-const getTimeSeriesReport= async (req,res)=>{
+const getTimeSeriesReport1= async (req,res)=>{
     try{
         const head=req.body.headers
         const value=req.body.value
