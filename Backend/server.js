@@ -9,7 +9,7 @@ const compression=require('compression')
 const head=require("./controllers/header")
 //const privatekey=fs.readFileSync('./ss')
 
-const userRoutes = require('./routes/user');
+const userRoutes = require('./routes/routes');
 // const session=require("express-session");
 const session = require('express-session');
 var sessions=session({

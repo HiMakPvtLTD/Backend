@@ -11,6 +11,7 @@ const node=require("../controllers/node-red")
 const Report=require("../controllers/export")
 const getdata=require("../controllers/testing")
 const head=require("../controllers/header")
+const alarm=require("../controllers/Alarm")
 const router = express.Router();
 const cors = require('cors');
 const body=require("body-parser")
@@ -92,6 +93,11 @@ router.post("/getGroupCData",analysis.GetgroupCdata)
 router.post("/getAggregateSeries",analysis.GetAggregateSeries)
 router.post("/getAggregateAmbiant",analysis.GetAggregateAmbiant)
 
+
+
+//for Alarm
+
+router.post("/getAlarm",alarm.getAlarm)
 
 //For aggregate Purpose
 router.post("/getGroupvsSeries",analysis.GetGroupvsSeries)
