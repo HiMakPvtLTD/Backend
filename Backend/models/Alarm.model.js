@@ -8,7 +8,7 @@ const getAlarm=async()=>{
         // FROM public."AlarmMaster" where state!='Inactive' and ackstate!='Acknowledged' group by  intime, chngtime, name, text, state, ackstate,
         // genid, source, datetime, projectid, testno, groupname, message  order by datetime limit 10`
         const query=`	with alarm  as (
-            select row_number() over(partition by name order by datetime desc ) as a,intime, chngtime, name, text, state, ackstate, genid, source,
+            select row_number() over(partition by name order by intime desc ) as a,intime, chngtime, name, text, state, ackstate, genid, source,
             datetime, projectid, testno, groupname, message from "AlarmMaster"
             ) select * from alarm where a=1 and state!='Inactive' and ackstate!='Acknowledged' limit 10`
         const result=await db.query(query)

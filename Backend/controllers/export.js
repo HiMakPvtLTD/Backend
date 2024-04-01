@@ -14,6 +14,7 @@ const echarts = require('echarts');
 // const autoTable=require("jspdf-autotable")
 const pdfMake=require("pdfmake/build/pdfmake")
 const pdffont=require("pdfmake/build/vfs_fonts")
+const { ECDH } = require("crypto")
 
 
 pdfMake.vfs=pdffont.pdfMake.vfs
@@ -489,9 +490,17 @@ const getTimeSeriesReport= async (req,res)=>{
                 const label=[]
                 const testhead=Object.keys(data[0])
                 console.log(testhead.slice(3,testhead.length))
-                const canvas = createCanvas(1500, 1500);
+                const canvas = createCanvas(1000, 1000);
 const ctx = canvas.getContext('2d');
+
+const customTheme = {
+    textStyle: {
+        fontFamily: 'DejaVu Sans'
+    }
+};
+echarts.registerTheme('customTheme',customTheme)
 const chart = echarts.init(canvas, "dark", { renderer: 'canvas' });
+
 
                 testhead.slice(3,testhead.length).map((item)=>{
                     chartConfig.push({
@@ -522,11 +531,13 @@ const chart = echarts.init(canvas, "dark", { renderer: 'canvas' });
                 console.log(chartConfig[5])
 
                 const options = {
+                    
                    
                     legend:{
                         
                         //orient:"vertical",
                         top:"bottom",
+                       
                         data:dataheader.slice(3,dataheader.length)
                     },
                     grid: {
@@ -537,18 +548,20 @@ const chart = echarts.init(canvas, "dark", { renderer: 'canvas' });
                       },
                     
                     xAxis: {
+                       
                         type: 'category',
                         data:label,
                     },
                     yAxis: {
+                       
                         type: 'value',
                     },
                     series: chartConfig
                 };
                 //console.log(options)
 
-                chart.setOption(options);
-                var buffers = canvas.toBuffer('image/jpeg');
+                chart.setOption(options,"customTheme");
+                var buffers = canvas.toDataURL('image/png',100);
                 console.log(2.7)
                // console.log(buffers.toString("base64"))
 
@@ -608,9 +621,9 @@ const chart = echarts.init(canvas, "dark", { renderer: 'canvas' });
                
     const imageId3 = workbook.addImage({
         base64: buffers.toString("base64"),
-        extension: 'jpg',
+        extension: 'png',
       });
-        worksheet2.addImage(imageId3, 'A29:K75');
+        worksheet2.addImage(imageId3, 'A29:K60');
        
 
                 // sheet.columns.map((item)=>{
