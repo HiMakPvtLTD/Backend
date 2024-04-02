@@ -579,6 +579,22 @@ const GetAggregateAmbiant=async(start,end,data,agg)=>{
 
 
 }
+const GroupCData=async(start,end,data)=>{
+    try{
+       if(data==undefined||data==null){
+        const query=`select * from "GroupCData" where "DateTime" between '${start}' and '${end}' order by "DateTime" desc`
+        const result=await db.query(query)
+        return result.rows
+       }
+       const query=`select ${data.join(",")} from "GroupCData" where "DateTime" between '${start}' and '${end}' order by "DateTime" desc`
+       const result=await db.query(query)
+       return result.rows
+
+    }
+    catch(err){
+        return err
+    }
+}
 
 const dumb=async(start,end)=>{
     try{
@@ -607,5 +623,6 @@ module.exports={
     DataforSeriesExport,
     GetAggregateSeries,
     GetAggregateAmbiant,
+    GroupCData,
     dumb
 }

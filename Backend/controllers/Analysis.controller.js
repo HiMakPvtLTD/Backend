@@ -185,6 +185,24 @@ const GetAggregateAmbiant=async(req,res)=>{
         res.send(err)
     }
 }
+const getAllGroupC=async(req,res)=>{
+    try{
+        const start=req.body.start
+        const end=req.body.end
+        const data=await analysis.GroupCData(start,end)
+        if(data){
+            res.send(data)
+        }
+        else{
+            res.send("No data Available")
+        }
+
+    }
+    catch(err){
+        res.send(err)
+    }
+
+}
 const dummb=async(req,res)=>{
     try{
         const start=req.body.start
@@ -217,6 +235,7 @@ module.exports={
     GetGroupvsambiant,
     GetAggregateSeries,
     GetAggregateAmbiant,
+    getAllGroupC,
     dummb
     
 }

@@ -17,9 +17,29 @@ const getAlarm=async(req,res)=>{
         res.send(err)
     }
 }
+const getAlarmRange=async(req,res)=>{
+    try{
+        const start=req.body.start
+        const  end=req.body.end
+        const arr=req.body.data
+        console.log(req.body)
+
+        const data=await alarm.getAlarmRange(start,end,arr)
+        if(data){
+            res.send(data)
+        }
+        else{
+            res.send("No data Available")
+        }
+
+    }
+    catch(err){
+        res.send(err)
+    }
+}
 
 
 
 module.exports={
-    getAlarm
+    getAlarm,getAlarmRange
 }

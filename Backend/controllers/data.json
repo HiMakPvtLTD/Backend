@@ -77,6 +77,40 @@
     "LabAirQualityPM10":"SPM 10 (ug/m3)",
     "LabHumidity":"Humidity (RH)",
     "LabTemp":"Temperature (°C)"
+},
+{
+    "ackstate":"Acknowledged State",
+    "chngtime":"Change Time",
+    "datetime":"DateTime",
+    "genid":"Gen ID",
+    "groupname":"Group",
+    "id":"ID",
+    "intime":"In Time",
+    "message":"Message",
+    "name":"Name",
+    "projectid":"Project Id",
+    "source":"Source",
+    "state":"State",
+    "testno":"TestNo",
+    "text":"Text",
+    "ProjectOwner":"Project Owner"
+},
+{
+    "ProjectId":"Project Id",
+    "ScaleMin":"Scale Minimum",
+    "ScaleMax":"Scale Maximum",
+    "Value":"Value",
+    "High":"High",
+    "HighHigh":"High High",
+    "Low":"Low",
+    "LowLow":"Low Low",
+    "UDef":"UDef",
+    "Index":"Index",
+    "DateTime":"Date Time",
+    "TestRunNo":"Test Run No",
+    "ProjectName":"Project Name",
+    "ProjectOwner":"Project Owner",
+    "TypeOfData":"Type Of Data"
 }
 
 

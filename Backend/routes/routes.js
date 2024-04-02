@@ -92,13 +92,14 @@ router.post("/GetAmbiantData",analysis.getAmbiantData)
 router.post("/getGroupCData",analysis.GetgroupCdata)
 router.post("/getAggregateSeries",analysis.GetAggregateSeries)
 router.post("/getAggregateAmbiant",analysis.GetAggregateAmbiant)
+router.post("/getAllGroupC",analysis.getAllGroupC)
 
 
 
 //for Alarm
 
 router.post("/getAlarm",alarm.getAlarm)
-
+router.post("/getAlarmData",alarm.getAlarmRange)
 //For aggregate Purpose
 router.post("/getGroupvsSeries",analysis.GetGroupvsSeries)
 
@@ -113,7 +114,8 @@ router.post("/sms",node.sms)
 router.post("/GetSeriesReport",Report.getTimeSeriesReport)
 // router.post("/getPdf",Report.TestPdf)
 router.post("/getAmbiantReport",Report.getAmbiantReport)
-router.post("/getTestReport",Report.GroupCExport)
+router.post("/getGroupCReport",Report.GroupCExport)
 router.post("/getTankReport",Report.getTankReport)
+router.post("/getAlarmReport",Report.getAlarmReport)
 
 module.exports = router;

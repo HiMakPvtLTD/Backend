@@ -4,6 +4,7 @@ var image=require("../function/image")
 const test=require("../models/test")
 const analysis=require("../models/Analysis.model")
 const dates=require("../function/date")
+const alarm=require("../models/Alarm.model")
 const headjson=require("./data.json")
 const { createCanvas } = require('canvas');
 const echarts = require('echarts');
@@ -844,6 +845,159 @@ const getAmbiantReport= async (req,res)=>{
         res.send(err)
     }
 }
+
+
+const getAlarmReport= async (req,res)=>{
+    try{
+     //   const head=req.body.headers
+      //  const value=req.body.value
+        const from=req.body.start
+        const to=req.body.end
+       // const id=req.body.projectId
+        //const needvar=req.body.data
+        var needvar=['datetime','source','name','projectid','testno','"ProjectOwner"','groupname','state','ackstate','intime','chngtime','message','text']
+       // needvar.push("ProjectOwner")
+       // console.log(req.body,needvar)
+        const data=await alarm.getAlarmExportData(from,to,needvar)
+        console.log(data[0])
+            const getaddress= await image.base64_encode()
+           // console.log(getaddress)
+           const length=needvar.length
+           console.log(1)
+            const workbook=new excel.Workbook()
+            const sheet=workbook.addWorksheet("NPD-Alarm-Report")
+           
+            // sheet.addImage({
+            //     base64: getaddress, // Replace with your actual base64-encoded image data
+            //     extension: 'png', // Replace with your image extension (e.g., png, jpeg)
+            // });
+            const imageId2 = workbook.addImage({
+                base64: getaddress,
+                extension: 'jpg',
+              });
+                sheet.addImage(imageId2, 'A1:F4');
+           
+              console.log(1.5)
+
+              const title=sheet.addRow(["NPD Alarm Report "])
+              title.font={bold:true,size:16}
+              title.alignment={horizontal:'center'}
+              sheet.mergeCells("A6:F6")
+              title.eachCell((item)=>{
+                item.fill={type: 'pattern',
+                pattern: 'solid',fgColor:{ argb: 'D3D3D3' }}
+               // item.border={bottom:{style:"thin",color:{argb:"FF000000"}}}
+            })
+              const title2=sheet.addRow(["(System Generated Report)"])
+              title2.alignment={horizontal:"center"}
+              sheet.mergeCells("A7:F7")
+              title2.eachCell((item)=>{
+                item.fill={type: 'pattern',
+                pattern: 'solid',fgColor:{ argb: 'D3D3D3' }}
+               // item.border={bottom:{style:"thin",color:{argb:"FF000000"}}}
+            })
+        
+            
+
+        var num=6
+        // sheet.columns.map((item)=>{
+        //     item.width=20
+        // })
+    
+        console.log(1.7)
+        
+
+        
+               
+              
+                sheet.addRow()
+                sheet.addRow([`Report Start Date`,dates.convertDateFormat(from),"","Report End Date",dates.convertDateFormat(to)]).alignment={horizontal:"center"}
+
+                sheet.getCell("A9").font={bold:true}
+                sheet.getCell("D9").font={bold:true}
+                sheet.addRow()
+                sheet.addRow()
+                const dataheader=[]
+
+               // const dataheader = Object.keys(data[0]);
+               Object.keys(data[0]).map((item)=>{
+                dataheader.push(headjson[5][item])
+
+               })
+              
+                const datavalue = data;
+        
+                const datahead=sheet.addRow(dataheader)
+                datahead.font={bold:true}
+                datahead.alignment={horizontal:"center",vertical:"middle",wrapText:true}
+                datahead.eachCell((item)=>{
+                    item.fill={type: 'pattern',
+                    pattern: 'solid',fgColor:{ argb: 'D3D3D3' }}
+                   // item.border={left:{style:"thin",color:{argb:"FF000000"}},right:{style:"thin",color:{argb:"FF000000"}},top:{style:"thin",color:{argb:"FF000000"}},bottom:{style:"thin",color:{argb:"FF000000"}}}
+                })
+              
+        
+                datavalue.forEach(item => {
+                    item["ProjectOwner"]=item["ProjectOwner"]==null?"-":item["ProjectOwner"]
+                    // item["groupname"]=item[groupname]=="Ab"
+                    const values = Object.values(item);
+                    values[0]=dates.convertDateFormat(values[0])
+                    values[9]=dates.convertDateFormat(values[9])
+                    values[10]=dates.convertDateFormat(values[10])
+                    
+                    const data=sheet.addRow(values);
+                    data.alignment={horizontal:"center"}
+                    data.numFmt="0.00"
+                });
+                console.log(2.5)
+
+
+                sheet.columns.forEach((column, colNumber) => {
+                    let maxLength = 0;
+                    column.eachCell({ includeEmpty: true }, (cell) => {
+                        const columnLength = cell.value ? cell.value.toString().length : 0;
+                        maxLength = Math.max(maxLength, columnLength);
+                    });
+                    column.width = maxLength < 10 ? 10 : maxLength + 2; // Adding extra width for padding
+                });
+                // sheet.add
+                // const chart = sheet.addChart('line', 'U1:AA10', 'AB1:AE10');
+                // chart.title = 'Database Chart';
+                // chart.xAxis.title = 'X Axis';
+                // chart.yAxis.title = 'Y Axis';
+                // console.log(2.7)
+                //var date=new Date()
+
+
+        
+                
+                // Save the workbook to a buffer and send it as a response
+                const date=new Date()
+                const custom=`${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`
+                var name="NPD-Environment-Report "+custom
+                
+                  workbook.xlsx.writeBuffer()
+                
+                    .then((buffer) => {
+                        res.attachment(`${name}.xlsx`);
+                        res.type('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                        console.log(3)
+                        res.send(buffer);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        res.status(500).send('Internal Server Error');
+                    });
+        
+        
+        
+        }
+
+    
+    catch(err){
+        res.send(err)
+    }
+}
 const getTankReport= async (req,res)=>{
     try{
      //   const head=req.body.headers
@@ -1023,151 +1177,308 @@ const getTankReport= async (req,res)=>{
 }
 
 
-const GroupCExport=async(req,res)=>{
+// const GroupCExport=async(req,res)=>{
 
-    try{
-        //   const head=req.body.headers
-         //  const value=req.body.value
-           const from=req.body.start
-           const to=req.body.end
-          // const id=req.body.projectId
-          // const needvar=req.body.data
-           ///console.log(req.body)
-             //    const data=await analysis.getMasterAmbientdata(from,to,needvar)
-            const data=await test.getTestCdata2(from,to)
-            // console.log(data[0])
-               const getaddress= await image.base64_encode()
-              // console.log(getaddress)
-             // const length=needvar.length
-              console.log(1)
-               const workbook=new excel.Workbook()
-               const sheet=workbook.addWorksheet("NPD-GroupC-Report")
+//     try{
+//         //   const head=req.body.headers
+//          //  const value=req.body.value
+//            const from=req.body.start
+//            const to=req.body.end
+//           // const id=req.body.projectId
+//           // const needvar=req.body.data
+//            ///console.log(req.body)
+//              //    const data=await analysis.getMasterAmbientdata(from,to,needvar)
+//             const data=await test.getTestCdata2(from,to)
+//             // console.log(data[0])
+//                const getaddress= await image.base64_encode()
+//               // console.log(getaddress)
+//              // const length=needvar.length
+//               console.log(1)
+//                const workbook=new excel.Workbook()
+//                const sheet=workbook.addWorksheet("NPD-GroupC-Report")
               
-               // sheet.addImage({
-               //     base64: getaddress, // Replace with your actual base64-encoded image data
-               //     extension: 'png', // Replace with your image extension (e.g., png, jpeg)
-               // });
-               const imageId2 = workbook.addImage({
-                   base64: getaddress,
-                   extension: 'jpg',
-                 });
-                   sheet.addImage(imageId2, 'A1:F4');
+//                // sheet.addImage({
+//                //     base64: getaddress, // Replace with your actual base64-encoded image data
+//                //     extension: 'png', // Replace with your image extension (e.g., png, jpeg)
+//                // });
+//                const imageId2 = workbook.addImage({
+//                    base64: getaddress,
+//                    extension: 'jpg',
+//                  });
+//                    sheet.addImage(imageId2, 'A1:F4');
 
                    
 
 
               
-                 console.log(1.5)
+//                  console.log(1.5)
            
                
-               // const headers=["ProjectId","Name","ProjectNo","Group","ProjectType","TestNo","ProjectConfig","TestBenchNo","StartDateTime","EndDateTime","Difference","BU Name","ProductName","ProductSize","Remarks"]
-               // const datas=["12010225227","Test","18432","B","EODD","27","Endurance","3","14-02-2024 12:50","14-02-2024 15:30","1D:12H:10M","Pop","Ponds","12","test"]
-           //   console.log(2)
-           //         if(head.length>length){
-           //             const headerow=sheet.addRow(head.slice(0,length),style="Bold")
-           //             headerow.font={bold:true}
-           //             headerow.alignment={horizontal:"center"}
-           //             sheet.addRow(value.slice(0,length))
-           //             sheet.addRow([])
-           //             const headerrow2=sheet.addRow(head.slice(length,-1))
-           //             headerrow2.font={bold:true}
-           //             headerrow2.alignment={horizontal:"center"}
-           //             sheet.addRow(value.slice(length,-1))
-           //         }
-           //         else{
-           //             sheet.addRow(head)
-           //             sheet.addRow(value)
-           //         }
-           var num=6
+//                // const headers=["ProjectId","Name","ProjectNo","Group","ProjectType","TestNo","ProjectConfig","TestBenchNo","StartDateTime","EndDateTime","Difference","BU Name","ProductName","ProductSize","Remarks"]
+//                // const datas=["12010225227","Test","18432","B","EODD","27","Endurance","3","14-02-2024 12:50","14-02-2024 15:30","1D:12H:10M","Pop","Ponds","12","test"]
+//            //   console.log(2)
+//            //         if(head.length>length){
+//            //             const headerow=sheet.addRow(head.slice(0,length),style="Bold")
+//            //             headerow.font={bold:true}
+//            //             headerow.alignment={horizontal:"center"}
+//            //             sheet.addRow(value.slice(0,length))
+//            //             sheet.addRow([])
+//            //             const headerrow2=sheet.addRow(head.slice(length,-1))
+//            //             headerrow2.font={bold:true}
+//            //             headerrow2.alignment={horizontal:"center"}
+//            //             sheet.addRow(value.slice(length,-1))
+//            //         }
+//            //         else{
+//            //             sheet.addRow(head)
+//            //             sheet.addRow(value)
+//            //         }
+//            var num=6
    
-           // headers.map((item,index)=>{
-           //     sheet.addRow([headers[index],"",datas[index]])
-           //     sheet.getCell(`A${num}`).font={bold:true}
+//            // headers.map((item,index)=>{
+//            //     sheet.addRow([headers[index],"",datas[index]])
+//            //     sheet.getCell(`A${num}`).font={bold:true}
                
                
                
                
               
               
-           //     num += 1; 
+//            //     num += 1; 
               
              
-           //     sheet.alignment={horizontal:"center"}
-           // })
-           console.log(data)
-           sheet.columns.map((item)=>{
-               item.width=20
-           })
-          // console.log(`A${num}`)
-           //
+//            //     sheet.alignment={horizontal:"center"}
+//            // })
+//            console.log(data)
+//            sheet.columns.map((item)=>{
+//                item.width=20
+//            })
+//           // console.log(`A${num}`)
+//            //
            
-           console.log(1.7)
+//            console.log(1.7)
            
    
            
                   
                  
-                //    sheet.addRow()
-                //    sheet.addRow([`Report Start Date`,dates.convertDate(from),"","Report End Date",dates.convertDate(to)]).alignment={horizontal:"center"}
+//                 //    sheet.addRow()
+//                 //    sheet.addRow([`Report Start Date`,dates.convertDate(from),"","Report End Date",dates.convertDate(to)]).alignment={horizontal:"center"}
    
-                //    sheet.getCell("A7").font={bold:true}
-                //    sheet.getCell("D7").font={bold:true}
-                //    sheet.addRow()
-                //    sheet.addRow()
+//                 //    sheet.getCell("A7").font={bold:true}
+//                 //    sheet.getCell("D7").font={bold:true}
+//                 //    sheet.addRow()
+//                 //    sheet.addRow()
    
-                   const dataheader = Object.keys(data[0]);
-                   const datavalue = data;
+//                    const dataheader = Object.keys(data[0]);
+//                    const datavalue = data;
            
-                   const datahead=sheet.addRow(dataheader)
-                   datahead.font={bold:true}
-                   datahead.alignment={horizontal:"center"}
+//                    const datahead=sheet.addRow(dataheader)
+//                    datahead.font={bold:true}
+//                    datahead.alignment={horizontal:"center"}
                    
            
-                   datavalue.forEach(item => {
-                       const values = Object.values(item);
-                       values[0]=dates.convertDate(values[0])
-                       const data=sheet.addRow(values);
-                       data.alignment={horizontal:"center"}
-                   });
-                   console.log(2.5)
-                   // sheet.add
-                   // const chart = sheet.addChart('line', 'U1:AA10', 'AB1:AE10');
-                   // chart.title = 'Database Chart';
-                   // chart.xAxis.title = 'X Axis';
-                   // chart.yAxis.title = 'Y Axis';
-                   // console.log(2.7)
-                   //var date=new Date()
+//                    datavalue.forEach(item => {
+//                        const values = Object.values(item);
+//                        values[0]=dates.convertDate(values[0])
+//                        const data=sheet.addRow(values);
+//                        data.alignment={horizontal:"center"}
+//                    });
+//                    console.log(2.5)
+//                    // sheet.add
+//                    // const chart = sheet.addChart('line', 'U1:AA10', 'AB1:AE10');
+//                    // chart.title = 'Database Chart';
+//                    // chart.xAxis.title = 'X Axis';
+//                    // chart.yAxis.title = 'Y Axis';
+//                    // console.log(2.7)
+//                    //var date=new Date()
    
    
            
                    
-                   // Save the workbook to a buffer and send it as a response
-                   const date=new Date()
-                   const custom=`${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`
-                   var name="NPD-Test-Report "+custom
+//                    // Save the workbook to a buffer and send it as a response
+//                    const date=new Date()
+//                    const custom=`${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`
+//                    var name="NPD-Test-Report "+custom
                    
-                     workbook.xlsx.writeBuffer()
+//                      workbook.xlsx.writeBuffer()
                    
-                       .then((buffer) => {
-                           res.attachment(`${name}.xlsx`);
-                           res.type('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                           console.log(3)
-                           res.send(buffer);
-                       })
-                       .catch((error) => {
-                           console.error('Error:', error);
-                           res.status(500).send('Internal Server Error');
-                       });
+//                        .then((buffer) => {
+//                            res.attachment(`${name}.xlsx`);
+//                            res.type('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+//                            console.log(3)
+//                            res.send(buffer);
+//                        })
+//                        .catch((error) => {
+//                            console.error('Error:', error);
+//                            res.status(500).send('Internal Server Error');
+//                        });
            
            
            
-           }
+//            }
    
        
-       catch(err){
-           res.send(err)
-       }
-   }
+//        catch(err){
+//            res.send(err)
+//        }
+//    }
+const GroupCExport= async (req,res)=>{
+    try{
+     //   const head=req.body.headers
+      //  const value=req.body.value
+        const from=req.body.start
+        const to=req.body.end
+       // const id=req.body.projectId
+        //const needvar=req.body.data
+        var needvar=[ '"DateTime"','"ProjectId"', '"TestRunNo"','"ProjectName"','"ProjectOwner"', '"ScaleMin"', '"ScaleMax"', '"Value"', '"High"', '"HighHigh"', '"Low"', '"LowLow"', '"UDef"', '"Index"','"TypeOfData"']
+       // needvar.push("ProjectOwner")
+       // console.log(req.body,needvar)
+        const data=await analysis.GroupCData(from,to,needvar)
+        console.log(data)
+            const getaddress= await image.base64_encode()
+           // console.log(getaddress)
+           const length=needvar.length
+           console.log(1)
+            const workbook=new excel.Workbook()
+            const sheet=workbook.addWorksheet("NPD-GroupC-Report")
+           
+            // sheet.addImage({
+            //     base64: getaddress, // Replace with your actual base64-encoded image data
+            //     extension: 'png', // Replace with your image extension (e.g., png, jpeg)
+            // });
+            const imageId2 = workbook.addImage({
+                base64: getaddress,
+                extension: 'jpg',
+              });
+                sheet.addImage(imageId2, 'A1:F4');
+           
+              console.log(1.5)
+
+              const title=sheet.addRow(["NPD GroupC Report "])
+              title.font={bold:true,size:16}
+              title.alignment={horizontal:'center'}
+              sheet.mergeCells("A6:F6")
+              title.eachCell((item)=>{
+                item.fill={type: 'pattern',
+                pattern: 'solid',fgColor:{ argb: 'D3D3D3' }}
+               // item.border={bottom:{style:"thin",color:{argb:"FF000000"}}}
+            })
+              const title2=sheet.addRow(["(System Generated Report)"])
+              title2.alignment={horizontal:"center"}
+              sheet.mergeCells("A7:F7")
+              title2.eachCell((item)=>{
+                item.fill={type: 'pattern',
+                pattern: 'solid',fgColor:{ argb: 'D3D3D3' }}
+               // item.border={bottom:{style:"thin",color:{argb:"FF000000"}}}
+            })
+        
+            
+
+        var num=6
+        // sheet.columns.map((item)=>{
+        //     item.width=20
+        // })
+    
+        console.log(1.7)
+        
+
+        
+               
+              
+                sheet.addRow()
+                sheet.addRow([`Report Start Date`,dates.convertDateFormat(from),"","Report End Date",dates.convertDateFormat(to)]).alignment={horizontal:"center"}
+
+                sheet.getCell("A9").font={bold:true}
+                sheet.getCell("D9").font={bold:true}
+                sheet.addRow()
+                sheet.addRow()
+                const dataheader=[]
+
+               // const dataheader = Object.keys(data[0]);
+               Object.keys(data[0]).map((item)=>{
+                dataheader.push(headjson[6][item])
+
+               })
+              
+                const datavalue = data;
+        
+                const datahead=sheet.addRow(dataheader)
+                datahead.font={bold:true}
+                datahead.alignment={horizontal:"center",vertical:"middle",wrapText:true}
+                datahead.eachCell((item)=>{
+                    item.fill={type: 'pattern',
+                    pattern: 'solid',fgColor:{ argb: 'D3D3D3' }}
+                   // item.border={left:{style:"thin",color:{argb:"FF000000"}},right:{style:"thin",color:{argb:"FF000000"}},top:{style:"thin",color:{argb:"FF000000"}},bottom:{style:"thin",color:{argb:"FF000000"}}}
+                })
+              
+        
+                datavalue.forEach(item => {
+                    item["ProjectOwner"]=item["ProjectOwner"]==null?"-":item["ProjectOwner"]
+                    // item["groupname"]=item[groupname]=="Ab"
+                    const values = Object.values(item);
+                    values[0]=dates.convertDateFormat(values[0])
+                     values[2]=`${values[2]}`
+                     values[13]=`${values[13]}`
+                    // values[10]=dates.convertDateFormat(values[10])
+                    
+                    const data=sheet.addRow(values);
+                    data.alignment={horizontal:"center"}
+                    data.numFmt="0.00"
+                });
+                console.log(2.5)
+
+
+                sheet.columns.forEach((column, colNumber) => {
+                    let maxLength = 0;
+                    column.eachCell({ includeEmpty: true }, (cell) => {
+                        const columnLength = cell.value ? cell.value.toString().length : 0;
+                        maxLength = Math.max(maxLength, columnLength);
+                    });
+                    column.width = maxLength < 10 ? 10 : maxLength + 1; // Adding extra width for padding
+                });
+                // sheet.add
+                // const chart = sheet.addChart('line', 'U1:AA10', 'AB1:AE10');
+                // chart.title = 'Database Chart';
+                // chart.xAxis.title = 'X Axis';
+                // chart.yAxis.title = 'Y Axis';
+                // console.log(2.7)
+                //var date=new Date()
+
+
+        
+                
+                // Save the workbook to a buffer and send it as a response
+                const date=new Date()
+                const custom=`${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`
+                var name="NPD-Environment-Report "+custom
+                
+                  workbook.xlsx.writeBuffer()
+                
+                    .then((buffer) => {
+                        res.attachment(`${name}.xlsx`);
+                        res.type('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                        console.log(3)
+                        res.send(buffer);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        res.status(500).send('Internal Server Error');
+                    });
+        
+        
+        
+        }
+
+    
+    catch(err){
+        res.send(err)
+    }
+}
+
+
+
+
+
 
 //    const TestPdf1=async(req,res)=>{
     
@@ -1354,5 +1665,5 @@ module.exports={
     getAmbiantReport,
     getTankReport,
     GroupCExport,
-    
+    getAlarmReport
 }
