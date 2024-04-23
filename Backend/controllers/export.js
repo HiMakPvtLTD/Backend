@@ -249,7 +249,7 @@ const getTimeSeriesReport= async (req,res)=>{
 
     
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 
@@ -799,7 +799,9 @@ const getAmbiantReport= async (req,res)=>{
               
         
                 datavalue.forEach(item => {
+                    
                     const values = Object.values(item);
+
                     values[0]=dates.convertDateFormat(values[0])
                     
                     const data=sheet.addRow(values);
@@ -842,7 +844,7 @@ const getAmbiantReport= async (req,res)=>{
 
     
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 
@@ -995,7 +997,7 @@ const getAlarmReport= async (req,res)=>{
 
     
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 const getTankReport= async (req,res)=>{
@@ -1172,7 +1174,7 @@ const getTankReport= async (req,res)=>{
 
     
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 
@@ -1471,7 +1473,7 @@ const GroupCExport= async (req,res)=>{
 
     
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 

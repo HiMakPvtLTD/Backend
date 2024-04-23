@@ -18,7 +18,7 @@ const GetAnalysisData=async(req,res)=>{
         }
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 const getAllAnalysisData=async(req,res)=>{
@@ -37,7 +37,7 @@ const getAllAnalysisData=async(req,res)=>{
         }
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 const getCVariable=async(req,res)=>{
@@ -57,7 +57,7 @@ const getCVariable=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
 
     }
 }
@@ -78,7 +78,7 @@ const getAmbiantData=async(req,res)=>{
 
 
     }catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 
 }
@@ -98,7 +98,7 @@ const GetgroupCdata=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 
 }
@@ -120,7 +120,7 @@ const GetGroupvsSeries=async(req,res)=>{
         }
 
     }catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 
 }
@@ -142,7 +142,7 @@ const GetGroupvsambiant=async(req,res)=>{
         }
 
     }catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 const GetAggregateSeries=async(req,res)=>{
@@ -163,7 +163,7 @@ const GetAggregateSeries=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 const GetAggregateAmbiant=async(req,res)=>{
@@ -182,7 +182,7 @@ const GetAggregateAmbiant=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 const getAllGroupC=async(req,res)=>{
@@ -199,7 +199,7 @@ const getAllGroupC=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 
 }
@@ -219,7 +219,7 @@ const dummb=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 
 }

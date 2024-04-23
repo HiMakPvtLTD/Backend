@@ -162,7 +162,7 @@ const getMainDashboardData = async (req, res) => {
         res.send({success:"false",message:"data not found"})
       }
     }catch(err){
-      res.send(err)
+      res.status(500).send("INTERNAL SERVER ERROR")
     }
   }
   //Get Last 5 Test Bench Data
@@ -177,7 +177,7 @@ const getMainDashboardData = async (req, res) => {
       }
     }
     catch(err){
-      res.send(err)
+      res.status(500).send("INTERNAL SERVER ERROR")
     }
   }
   //Get Test Object Count
@@ -198,7 +198,7 @@ const getMainDashboardData = async (req, res) => {
     }
     }
     catch(err){
-      res.send(err)
+      res.status(500).send("INTERNAL SERVER ERROR")
     }
   }
   //Get 7 Test Bench data
@@ -229,7 +229,7 @@ const getMainDashboardData = async (req, res) => {
       }
     }
     catch(err){
-      res.send(err)
+      res.status(500).send("INTERNAL SERVER ERROR")
     }
   }
   // Get Project Details by id for 2 dashboard 
@@ -250,7 +250,7 @@ const getMainDashboardData = async (req, res) => {
     }
     catch(err){
      // console.log(err)
-      res.send(err)
+     res.status(500).send("INTERNAL SERVER ERROR")
     }
   }
   const getTakStatus=async(req,res)=>{
@@ -282,7 +282,7 @@ const getMainDashboardData = async (req, res) => {
       }
     }
     catch(err){
-      res.send(err)
+      res.status(500).send("INTERNAL SERVER ERROR")
     }
 
   }
@@ -300,7 +300,7 @@ const getMainDashboardData = async (req, res) => {
       }
 
     }catch(err){
-      res.send(err)
+      res.status(500).send("INTERNAL SERVER ERROR")
     }
 
   }
@@ -347,7 +347,7 @@ const getMainDashboardData = async (req, res) => {
 
     }
     catch(err){
-      res.send(err)
+      res.status(500).send("INTERNAL SERVER ERROR")
     }
   }
   

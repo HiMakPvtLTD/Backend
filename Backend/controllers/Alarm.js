@@ -14,7 +14,7 @@ const getAlarm=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 const getAlarmRange=async(req,res)=>{
@@ -34,7 +34,7 @@ const getAlarmRange=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 

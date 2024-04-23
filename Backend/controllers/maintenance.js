@@ -38,7 +38,7 @@ const UpdatePanelStatus=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 
@@ -55,7 +55,7 @@ const getPanelStatus=async(req,res)=>{
         }
 
     }catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 const CreateMaintenance=async(req,res)=>{
@@ -71,7 +71,7 @@ const CreateMaintenance=async(req,res)=>{
 
 
     }catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 
 }
@@ -92,7 +92,7 @@ const UpdateMaintenance=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 const SelectMaintenance=async(req,res)=>{
@@ -111,7 +111,7 @@ const SelectMaintenance=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 
@@ -128,7 +128,7 @@ const deleteMaintenance=async(req,res)=>{
   
     }
     catch(err){
-      res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
   }
 
@@ -146,7 +146,7 @@ const GetMaintenancebyid=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 

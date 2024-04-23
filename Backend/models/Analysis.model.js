@@ -11,13 +11,16 @@ const getTimeSeriesData=async(from,to,projectid,no,data)=>{
         
         
         var p=""
-        var statement=`where "DateTime" between '${from}' and '${to}' `
+        const values=[from,to]
+        var statement=`where "DateTime" between $1 and $2 `
        // console.log(arr,from,to,projectid,no,data)
         //console.log(projectid!=null)
         if(projectid!=null){
-             p+=`and "ProjectId"='${projectid}'`
+             p+=`and "ProjectId"=$3`
+             values.push(projectid)
              if(no!=null){
-                p+=`and "TestNo"=${no}`
+                p+=` and "TestNo"=$4`
+                values.push(no)
              }
              else{
                 
@@ -47,7 +50,7 @@ const getTimeSeriesData=async(from,to,projectid,no,data)=>{
         //console.log(query)
       //const query=`select ${arr.join()} from "TimeseriesData" ${statement} order by "DateTime" desc`
         console.log(query)
-        const result=await db.query(query)
+        const result=await db.query(query,values)
 
         // const dat=[]
         // result.rows.map((item)=>{
@@ -154,8 +157,8 @@ const DataforSeriesExport=async(projectid,data,no)=>{
 const getGroupCData=async(start,end)=>{
     try{
         //var query=`select distinct ("Index","UDef") as "Data" from "GroupCData" where "DateTime" between '${start}' and '${end}'`
-       var query=`select Distinct("Index"||'-'||"UDef") as "Data" from "GroupCData" where "DateTime" between '${start}' and '${end}' ` 
-       const result= await db.query(query)
+       var query=`select Distinct("Index"||'-'||"UDef") as "Data" from "GroupCData" where "DateTime" between $1 and $2 ` 
+       const result= await db.query(query,[start,end])
         return result.rows
 
     }
@@ -196,9 +199,9 @@ const getMasterAmbientdata=async(start,end,data)=>{
             }
         }
         else{
-            const query=`select * from "MasterPanel" where "DateTime" between '${start}' and '${end}' order by "DateTime" desc`
+            const query=`select * from "MasterPanel" where "DateTime" between $1 and $2 order by "DateTime" desc`
            console.log(query)
-            const result=await db.query(query)
+            const result=await db.query(query,[start,end])
             return result.rows
         }
       }
@@ -209,9 +212,9 @@ const getMasterAmbientdata=async(start,end,data)=>{
             arrt.push(`"${item}"`)
         })
       //  console.log(arrt)
-        const query=`select "DateTime",${arrt.join()} from "MasterPanel" where "DateTime" between '${start}' and '${end}' order by "DateTime" desc`
+        const query=`select "DateTime",${arrt.join()} from "MasterPanel" where "DateTime" between $1 and $2 order by "DateTime" desc`
         console.log(query)
-        const result=await db.query(query)
+        const result=await db.query(query,[start,end])
         return result.rows
 
       }
@@ -296,7 +299,7 @@ const GetGroupCData=async(start,end,data)=>{
     // ) as final`
 
     console.log(3)
-    console.log(query2)
+    //console.log(query2)
     const result1=await db.query(query2)
     //console.log(result1.rows[0].DateTime)
 

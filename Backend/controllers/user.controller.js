@@ -80,7 +80,7 @@ const forgotPassword=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const changePassword=async(req,res)=>{
@@ -100,7 +100,7 @@ const changePassword=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const getRoleMaster=async(req,res)=>{
@@ -116,7 +116,7 @@ const getRoleMaster=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const SetRole=async(req,res)=>{
@@ -137,7 +137,7 @@ const SetRole=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const UpdateRole=async(req,res)=>{
@@ -154,7 +154,7 @@ const UpdateRole=async(req,res)=>{
     }
 
   }catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const getAllRole=async(req,res)=>{
@@ -168,7 +168,7 @@ const getAllRole=async(req,res)=>{
     }
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const getAlluser=async(req,res)=>{
@@ -183,7 +183,7 @@ const getAlluser=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const CreateUser=async(req,res)=>{
@@ -202,7 +202,7 @@ const CreateUser=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 
 }
@@ -221,7 +221,7 @@ const UpdateUser=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const deleteUser=async(req,res)=>{
@@ -237,7 +237,7 @@ const deleteUser=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const GetUserbyId=async(req,res)=>{
@@ -253,7 +253,7 @@ const GetUserbyId=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const CreateUserNote=async(req,res)=>{
@@ -269,7 +269,7 @@ const CreateUserNote=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const UpdateUserNote=async(req,res)=>{
@@ -288,7 +288,7 @@ const UpdateUserNote=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const SelectUserNotebyid=async(req,res)=>{
@@ -304,7 +304,7 @@ const SelectUserNotebyid=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const CreateFav=async(req,res)=>{
@@ -319,7 +319,7 @@ const CreateFav=async(req,res)=>{
     }
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const UpdateFav=async(req,res)=>{
@@ -335,7 +335,7 @@ const UpdateFav=async(req,res)=>{
     }
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const selectFav=async(req,res)=>{
@@ -349,7 +349,7 @@ const selectFav=async(req,res)=>{
       res.send("No Data Available")
     }
   }catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 
@@ -368,7 +368,7 @@ const deleteFav=async(req,res)=>{
     }
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const GetAllNotes=async(req,res)=>{
@@ -384,7 +384,7 @@ const GetAllNotes=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const deleteNote=async(req,res)=>{
@@ -400,7 +400,7 @@ const deleteNote=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const createAnnotation=async(req,res)=>{
@@ -417,7 +417,7 @@ const createAnnotation=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 
 }
@@ -435,7 +435,7 @@ const UpdateAnnotation=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 
 }
@@ -454,7 +454,7 @@ const SelectAnnotaionbyid=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const DeleteAnnotaion=async(req,res)=>{
@@ -469,7 +469,7 @@ const DeleteAnnotaion=async(req,res)=>{
     }
 
   }catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 const SelectAllAnnotaion=async(req,res)=>{
@@ -485,7 +485,7 @@ const SelectAllAnnotaion=async(req,res)=>{
 
   }
   catch(err){
-    res.send(err)
+    res.status(500).send("INTERNAL SERVER ERROR")
   }
 }
 

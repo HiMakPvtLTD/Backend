@@ -13,7 +13,7 @@ const runProjectList=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 
 }
@@ -32,7 +32,7 @@ const getProjectDetailsan=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 
 }

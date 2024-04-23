@@ -18,7 +18,7 @@ const sendMailtored=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 
 }
@@ -31,7 +31,7 @@ const sms=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 
 }

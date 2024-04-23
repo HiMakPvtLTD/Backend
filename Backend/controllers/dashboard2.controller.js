@@ -24,7 +24,7 @@ const getListView=async(req,res)=>{
         }
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 
 }
@@ -43,7 +43,7 @@ const GetAlltestView=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 const getTestBenchtypeCount=async(req,res)=>{
@@ -65,7 +65,7 @@ const getTestBenchtypeCount=async(req,res)=>{
         }
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
     }
 // const getSeriesDatabyId=async(req,res)=>{

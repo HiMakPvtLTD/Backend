@@ -16,9 +16,9 @@ const getMainDashboardData = async () => {
   const getChartData = async (starttime,endtime) => {
     try {
      //  console.log(starttime,endtime)
-      const query = `SELECT "DateTime","LabAirQualityVOC","LabAirQualityPM2_5","LabHumidity","LabAirQualityPM10","LabTemp" FROM "MasterPanel" where "DateTime">='${starttime}' and "DateTime"<='${endtime}' order by "DateTime" desc`
-     // console.log(query)
-      const results = await db.query(query);
+      const query = 'SELECT "DateTime","LabAirQualityVOC","LabAirQualityPM2_5","LabHumidity","LabAirQualityPM10","LabTemp" FROM "MasterPanel" where "DateTime">=$1 and "DateTime"<=$2 order by "DateTime" desc'
+      console.log(query)
+      const results = await db.query(query,[starttime,endtime]);
       return results.rows
     } catch (err) {
       console.error(err);
@@ -105,19 +105,17 @@ const getMainDashboardData = async () => {
   }
   // Get Project Details by Id
   const getProjectDetials=async(projectid)=>{
-    const query=`select tbr."Status",pm."ProjectName",pm."ProjectNo",pm."ProjectType",pm."ProjectId",tbr."TestRunCount",pm."Group",pm."ProjectOwner",pm."ProjectConfig",tbr."TestBenchId" from "TestBenchCurrentStatus" tbr
-    join "ProjectMaster" pm on tbr."ProjectId"=pm."ProjectId" Where tbr."ProjectId"=${projectid}`
-    const result= await db.query(query)
+    const query='select tbr."Status",pm."ProjectName",pm."ProjectNo",pm."ProjectType",pm."ProjectId",tbr."TestRunCount",pm."Group",pm."ProjectOwner",pm."ProjectConfig",tbr."TestBenchId" from "TestBenchCurrentStatus" tbr join "ProjectMaster" pm on tbr."ProjectId"=pm."ProjectId" Where tbr."ProjectId"=$1'
+    const result= await db.query(query,[projectid])
     return result.rows
 
   }
 
   const GetCurrentTestBenchDetails=async(benchno)=>{
     try{
-      const query=`select tbr."Status",pm."ProjectName",pm."ProjectNo",pm."ProjectType",pm."ProjectId",tbr."TestRunCount",pm."Group",pm."ProjectOwner",pm."ProjectConfig",tbr."TestBenchId" from "TestBenchCurrentStatus" tbr
-      join "ProjectMaster" pm on tbr."ProjectId"=pm."ProjectId" Where tbr."TestBenchId"=${benchno}`
+      const query='select tbr."Status",pm."ProjectName",pm."ProjectNo",pm."ProjectType",pm."ProjectId",tbr."TestRunCount",pm."Group",pm."ProjectOwner",pm."ProjectConfig",tbr."TestBenchId" from "TestBenchCurrentStatus" tbr join "ProjectMaster" pm on tbr."ProjectId"=pm."ProjectId" Where tbr."TestBenchId"=$1'
       console.log(query)
-      const result=await db.query(query)
+      const result=await db.query(query,[benchno])
       return result.rows
 
     }
@@ -170,19 +168,19 @@ const getMainDashboardData = async () => {
     const query=`	WITH main_query AS (
       SELECT
           CASE
-              WHEN ${no} NOT IN (SELECT "TestNo" FROM "TestRunData" where "ProjectId"='${projectid}') THEN
+              WHEN $1 NOT IN (SELECT "TestNo" FROM "TestRunData" where "ProjectId"=$2) THEN
         
-      (select (select (floor("Act_TestRunTime"/60)+"EndTestRunTimeMin"+floor("EndTestRunTimeDay")*1440+floor("EndTestRunTimeHour")*60) as totaltime  from "TimeseriesData" where "ProjectId"='${projectid}' and "TestNo"='${no}' order by "DateTime" desc limit 1  
-  )+(select sum(EXTRACT(epoch FROM "TestRunData"."EndDateTime" - "TestRunData"."StartDateTime") / 60::numeric) from "TestRunData" where "ProjectId"='${projectid}') as diff
+      (select (select (floor("Act_TestRunTime"/60)+"EndTestRunTimeMin"+floor("EndTestRunTimeDay")*1440+floor("EndTestRunTimeHour")*60) as totaltime  from "TimeseriesData" where "ProjectId"=$3 and "TestNo"=$4 order by "DateTime" desc limit 1  
+  )+(select sum(EXTRACT(epoch FROM "TestRunData"."EndDateTime" - "TestRunData"."StartDateTime") / 60::numeric) from "TestRunData" where "ProjectId"=$5) as diff
     )
       ELSE
-                ( select sum(EXTRACT(epoch FROM "TestRunData"."EndDateTime" - "TestRunData"."StartDateTime") / 60::numeric) from "TestRunData" where "ProjectId"='${projectid}')
+                ( select sum(EXTRACT(epoch FROM "TestRunData"."EndDateTime" - "TestRunData"."StartDateTime") / 60::numeric) from "TestRunData" where "ProjectId"=$6)
           END AS diff
   )
   SELECT * FROM main_query;
     `
    // console.log(query)
-    const result=await db.query(query)
+    const result=await db.query(query,[no,projectid,projectid,no,projectid,projectid])
     console.log(result.rows[0].diff)
     if(result.rows[0].diff!=null){
       console.log(1)
@@ -206,8 +204,8 @@ const getMainDashboardData = async () => {
     return data
     }else{
       console.log(2)
-         const query=`select sum(EXTRACT(epoch FROM "TestRunData"."EndDateTime" - "TestRunData"."StartDateTime") / 60::numeric) as diff from "TestRunData" where "ProjectId"='${projectid}'`
-         const result=await db.query(query)
+         const query=`select sum(EXTRACT(epoch FROM "TestRunData"."EndDateTime" - "TestRunData"."StartDateTime") / 60::numeric) as diff from "TestRunData" where "ProjectId"=$1`
+         const result=await db.query(query,[projectid])
 
       if (result.rows[0].diff==null){
         return []

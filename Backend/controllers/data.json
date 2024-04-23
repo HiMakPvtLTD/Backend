@@ -27,7 +27,9 @@
         "LabAirQualityPM2_5":"SPM 2.5 (ug/m3)",
         "LabAirQualityPM10":"SPM 10 (ug/m3)",
         "LabHumidity":"Humidity (RH)",
-        "LabTemp":"Temperature (°C)"
+        "LabTemp":"Temperature (°C)",
+        "New_PM25":"PM 2.5 _New (ug/m3)",
+        "New_PM10":"PM 10_ New (ug/m3)"
     },
     {   "DateTime":"DateTime",
         "WaterTankTemp":"Water Tank Temperature (°C)",
@@ -76,7 +78,9 @@
     "LabAirQualityPM2_5":"SPM 2.5 (ug/m3)",
     "LabAirQualityPM10":"SPM 10 (ug/m3)",
     "LabHumidity":"Humidity (RH)",
-    "LabTemp":"Temperature (°C)"
+    "LabTemp":"Temperature (°C)",
+    "New_PM25":"PM 2.5 _New (ug/m3)",
+    "New_PM10":"PM 10_ New (ug/m3)"
 },
 {
     "ackstate":"Acknowledged State",

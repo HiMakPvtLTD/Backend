@@ -73,9 +73,9 @@ const forgotPassword=async(user)=>{
   try{
     //console.log(user)
     
-    const sql=`select uid,email,mobileno from "UserMaster" where uname='${user}'`
+    const sql='select uid,email,mobileno from "UserMaster" where uname=$1'
     //console.log(sql)
-    const result=await db.query(sql)
+    const result=await db.query(sql,[user])
     //console.log(result)
     if(result.rows.length<=0){
     return {
@@ -125,8 +125,8 @@ const changePassword=async(password,id,date)=>{
     
       //password=await bcrypt.hash(password,saltrounds)
       console.log(password)
-      const sql=`update "UserMaster" set password='${password}',updateddate='${date}' where uid='${id}'`
-      const result= await db.query(sql)
+      const sql='update "UserMaster" set password=$1,updateddate=$2 where uid=$3'
+      const result= await db.query(sql,[password,date,id])
        return result.rows
     
    
@@ -168,9 +168,10 @@ const SetRole=async(data)=>{
       }else{
         const query=`INSERT INTO public."RoleMaster"(
           rolename, createdbyid, labdash, runningprojectdash, historicalprojects, dataanalysis, logreport, maintenancetool, remoteoperation, alarmaccess, usermanagment, status, eodd, aodd, createddatetime,envreport, groupcreport, usernote, processreport)
-         VALUES ( '${name}', ${data.id}, ${data.labdash},${data.running},${data.historical},${data.datananlysis},${data.logreport},${data.maintenancetool},${data.remoteoperation},${data.alarmaccess},${data.usermanagment},${data.status},${data.eodd},${data.aodd},'${data.date}',${data.envreport},${data.groupcreport},${data.usernote},${data.processreport});`
+         VALUES ( $1, $2, $3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19);`
        // console.log(query)
-        const result=await db.query(query)
+       const datas=[name,data.id,data.labdash,data.running,data.historical,data.datananlysis,data.logreport,data.maintenancetool,data.remoteoperation,data.alarmaccess,data.usermanagment,data.status,data.eodd,data.aodd,data.date,data.envreport,data.groupcreport,data.usernote,data.processreport]
+        const result=await db.query(query,datas)
         return {
           message:"Inserted Succesfully",
           status:"200"
@@ -313,13 +314,13 @@ const CreateUser=async(data)=>{
          newimage=await image.compress_image(data.userimage)
         }
         console.log(newimage)
-        
         const query=`INSERT INTO public."UserMaster"(
           uname, password, updateddate, updatedby, email, roleid, mobileno, createddate, ustatus,fullname,type,userimage)
-          VALUES ('${data.name}', '${data.password}', '${data.updateDate}', ${data.updateby}, '${data.email}', ${data.roleid}, ${data.mobile}, '${data.createdate}', ${data.status},'${data.fullname}','${data.type}','${newimage}');`
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8,$9,$10,$11,$12);`
   
         console.log(query)
-        const result=await db.query(query)
+        const datas=[data.name, data.password, data.updateDate, data.updateby, data.email, data.roleid, data.mobile, data.createdate, data.status,data.fullname,data.type,newimage]
+        const result=await db.query(query,datas)
         const mailbody=`Dear ${data.fullname},\n Welcome to Avishkar NPD Lab Application.\n This will help you monitor & analyse test bench operation remotely to optimize the testing of the equipment’s.\nFollow below steps to setup password to access application:\n\n1.Click on  https://avishkarlab.idexinsights.ai link.\n2.Enter ${data.name} in username tab\n3.Click on “Forgot Password?”\n4.Enter OTP received on email or phone\n5.Enter OTP and set the password\n6.Reset after entering OTP and password\n7.Login with Username and password\n\nIn case of any trouble, please contact iotlab@idexcorp.com\nThank You,\nAvishkar NPD Lab
         `
 const smsbody=` Dear ${data.fullname},\n  Welcome to the Avishkar NPD Lab Application.\n 1.Click on https://avishkarlab.idexinsights.ai link to set password.\n2. Enter ${data.name} in username tab\n 3. Click on “Forgot Password?”\n4.Enter OTP received on email or phone\n 5.Enter OTP and set the password to login

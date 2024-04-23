@@ -127,7 +127,7 @@ const timeSeriesbyId=async(req,res)=>{
     }
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
     
 
@@ -147,7 +147,7 @@ const getTimeSeriesDatabyID=async(req,res)=>{
             res.send("No Data Available")
         }
     }catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 
 }
@@ -164,7 +164,7 @@ const getLastRun= async(req,res)=>{
     }
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 
 }
@@ -196,7 +196,7 @@ const getTestBenchseq=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 const getStatsdata=async(req,res)=>{
@@ -218,7 +218,7 @@ const getStatsdata=async(req,res)=>{
 
     }
     catch(err){
-        res.send(err)
+        res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
 module.exports={
