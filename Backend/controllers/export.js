@@ -808,6 +808,16 @@ const getAmbiantReport= async (req,res)=>{
                     data.alignment={horizontal:"center"}
                     data.numFmt="0.00"
                 });
+
+                sheet.columns.forEach((column, colNumber) => {
+                    let maxLength = 0;
+                    column.eachCell({ includeEmpty: true }, (cell) => {
+                        const columnLength = cell.value ? cell.value.toString().length : 0;
+                        maxLength = Math.max(maxLength, columnLength);
+                    });
+                    column.width = maxLength < 10 ? 10 : maxLength + 2; // Adding extra width for padding
+                });
+
                 console.log(2.5)
                 // sheet.add
                 // const chart = sheet.addChart('line', 'U1:AA10', 'AB1:AE10');
