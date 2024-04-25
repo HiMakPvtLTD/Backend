@@ -16,7 +16,7 @@ const getMainDashboardData = async () => {
   const getChartData = async (starttime,endtime) => {
     try {
      //  console.log(starttime,endtime)
-      const query = 'SELECT "DateTime","LabAirQualityVOC","LabAirQualityPM2_5","LabHumidity","LabAirQualityPM10","LabTemp" FROM "MasterPanel" where "DateTime">=$1 and "DateTime"<=$2 order by "DateTime" desc'
+      const query = 'SELECT "DateTime","LabAirQualityVOC","LabAirQualityPM2_5","LabHumidity","LabAirQualityPM10","LabTemp","New_PM25", "New_PM10" FROM "MasterPanel" where "DateTime">=$1 and "DateTime"<=$2 order by "DateTime" desc'
       console.log(query)
       const results = await db.query(query,[starttime,endtime]);
       return results.rows
